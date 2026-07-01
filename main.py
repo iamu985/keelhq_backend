@@ -2,8 +2,12 @@ import os
 import asyncio
 from devtools import pprint
 from scripts.test_engine import test_connection
+from scripts.test_settings import test_settings
 
-RUNNERS = {"test_connection": test_connection}
+RUNNERS = {
+    "test_connection": [test_connection, True],
+    "test_settings": [test_settings, False],
+}
 
 
 if __name__ == "__main__":
@@ -29,9 +33,13 @@ if __name__ == "__main__":
 
         else:
             index = int(cmd) - 1
-            func = RUNNERS[indexes[index]]
-            result = asyncio.run(func())
-            pprint(result)
+            func, run_async = RUNNERS[indexes[index]]
+            if run_async:
+                result = asyncio.run(func())
+                pprint(result)
+            else:
+                result = func()
+                pprint(result)
             cont = input("Continue[y/n]: ")
             if cont == "n":
                 running = False
