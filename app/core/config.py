@@ -17,6 +17,10 @@ class DatabaseConfiguration(BaseModel):
     database: str
     port: int = 5432
 
+    @property
+    def connection_url(self):
+        return f"postgresql+asyncpg://{self.username}:{self.password}@{self.host}:{self.port}/{self.database}"
+
 
 class Settings(BaseSettings):
     version: str = VERSION
