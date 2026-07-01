@@ -8,6 +8,7 @@ Responsibility:
 
 import asyncio
 from logging.config import fileConfig
+from typing import Any, Literal
 
 from alembic import context
 from sqlalchemy.engine import Connection
@@ -43,6 +44,21 @@ target_metadata = metadata
 # ... etc.
 
 
+def render_item(type_: str, obj: Any, autogen_context: Any) -> str | Literal[False]:
+    """Render SQLModel AutoString as plain SQLAlchemy sa.String.
+
+    SQLModel's AutoString is a String subclass. Rendering it as sa.String
+    avoids generated migrations importing sqlmodel internals, which would cause
+    NameError if the migration template does not import sqlmodel.
+    """
+    if type_ == "type" and type(obj).__name__ == "AutoString":
+        length = getattr(obj, "length", None)
+        if length:
+            return f"sa.String(length={length})"
+        return "sa.String()"
+    return False
+
+
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
 
@@ -61,6 +77,7 @@ def run_migrations_offline() -> None:
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        render_item=render_item,
     )
 
     with context.begin_transaction():
@@ -74,7 +91,11 @@ def do_run_migrations(connection: Connection) -> None:
     a synchronous Connection proxy, and Alembic's context expects a sync
     connection.
     """
-    context.configure(connection=connection, target_metadata=target_metadata)
+    context.configure(
+        connection=connection,
+        target_metadata=target_metadata,
+        render_item=render_item,
+    )
     with context.begin_transaction():
         context.run_migrations()
 

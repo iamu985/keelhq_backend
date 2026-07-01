@@ -21,9 +21,9 @@ class Site(SQLModel, table=True):
         default_factory=uuid4,
         sa_column=Column(PGUUID(as_uuid=True), primary_key=True),
     )
-    owner_id: UUID = Field(
-        sa_column=Column(PGUUID(as_uuid=True), ForeignKey("auth.users.id"), nullable=False),
-    )
+    # owner_id: UUID = Field(
+    #     sa_column=Column(PGUUID(as_uuid=True), ForeignKey("auth.users.id"), nullable=False),
+    # )
     name: str = Field(nullable=False)
     slug: str = Field(unique=True, nullable=False)
     description: Optional[str] = Field(default=None, max_length=250)
