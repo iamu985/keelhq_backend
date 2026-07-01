@@ -1,26 +1,26 @@
 [project]
-name = "portfolio-builder"
+name = "keelhq"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "alembic>=1.18.5",
-    "asyncpg>=0.31.0",
-    "fastapi[standard]>=0.138.0",
-    "fastmcp>=3.4.2",
-    "loguru>=0.7.3",
-    "pydantic-settings>=2.14.2",
-    "sqlalchemy>=2.0.51",
-    "supabase-orm>=0.2.0",
-    "uvicorn>=0.49.0",
+  "alembic>=1.18.5",
+  "asyncpg>=0.31.0",
+  "fastapi[standard]>=0.138.0",
+  "fastmcp>=3.4.2",
+  "loguru>=0.7.3",
+  "pydantic-settings>=2.14.2",
+  "sqlalchemy>=2.0.51",
+  "supabase-orm>=0.2.0",
+  "uvicorn>=0.49.0",
 ]
 
 [dependency-groups]
 dev = [
-    "devtools>=0.12.2",
-    "ipython>=9.14.1",
-    "mypy>=2.1.0",
-    "pytest>=9.1.1",
-    "ruff>=0.15.20",
+  "devtools>=0.12.2",
+  "ipython>=9.14.1",
+  "mypy>=2.1.0",
+  "pytest>=9.1.1",
+  "ruff>=0.15.20",
 ]
