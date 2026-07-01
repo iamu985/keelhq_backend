@@ -19,7 +19,7 @@ class DatabaseConfiguration(BaseModel):
 
     @property
     def connection_url(self):
-        return f"postgresql+asyncpg://{self.username}:{self.password}@{self.host}:{self.port}/{self.database}"
+        return f"postgresql+asyncpg://{self.username}:{self.password.get_secret_value()}@{self.host}:{self.port}/{self.database}"
 
 
 class Settings(BaseSettings):
