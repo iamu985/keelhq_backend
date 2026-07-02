@@ -24,6 +24,21 @@ class UUIDMixin(SQLModel, table=False):
     id: UUID = Field(default_factory=uuid4, primary_key=True)
 
 
+class IsPartOfSolution(SQLModel, table=False):
+    """
+    Mixin that adds a FOREIGN KEY relation to solutions.
+
+    Responsibility:
+    - Provide a reusable, PostgreSQL-compatible fk relation.
+    """
+
+    solution_id: UUID = Field(foreign_key="solutions.id")
+
+
+class IsPartOfSite(SQLModel, table=False):
+    site_id: UUID = Field(foreign_key="sites.id")
+
+
 # TODO: add unit tests for this model
 class TimestampMixin(SQLModel, table=False):
     """Mixin that adds created/updated timestamp fields.
