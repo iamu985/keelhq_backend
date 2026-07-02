@@ -36,6 +36,13 @@ class IsPartOfSolution(SQLModel, table=False):
 
 
 class IsPartOfSite(SQLModel, table=False):
+    """
+    Mixin that adds a FOREIGN KEY relation to sites.
+
+    Responsibility:
+    - Provide a reusable, PostgreSQL-compatible fk relation.
+    """
+
     site_id: UUID = Field(foreign_key="sites.id")
 
 
