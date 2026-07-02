@@ -21,10 +21,7 @@ class UUIDMixin(SQLModel, table=False):
     - Provide a reusable, PostgreSQL-compatible UUID primary key field.
     """
 
-    id: UUID = Field(
-        default_factory=uuid4,
-        sa_column=Column(PGUUID(as_uuid=True), primary_key=True),
-    )
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
 
 
 # TODO: add unit tests for this model
@@ -37,11 +34,9 @@ class TimestampMixin(SQLModel, table=False):
 
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc),
-        sa_column=Column(DateTime(timezone=True), nullable=False),
     )
     updated_at: Optional[datetime] = Field(
         default=None,
-        sa_column=Column(DateTime(timezone=True), nullable=True),
     )
 
 
