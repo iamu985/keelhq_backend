@@ -8,8 +8,6 @@ from datetime import datetime, timezone
 from typing import Optional
 from uuid import UUID, uuid4
 
-from sqlalchemy import Column, DateTime
-from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlmodel import Field, SQLModel
 
 
@@ -32,7 +30,7 @@ class IsPartOfSolution(SQLModel, table=False):
     - Provide a reusable, PostgreSQL-compatible fk relation.
     """
 
-    solution_id: UUID = Field(foreign_key="solutions.id")
+    solution_id: UUID = Field(foreign_key="solutions.id", index=True)
 
 
 class IsPartOfSite(SQLModel, table=False):
@@ -43,7 +41,7 @@ class IsPartOfSite(SQLModel, table=False):
     - Provide a reusable, PostgreSQL-compatible fk relation.
     """
 
-    site_id: UUID = Field(foreign_key="sites.id")
+    site_id: UUID = Field(foreign_key="sites.id", index=True)
 
 
 # TODO: add unit tests for this model
