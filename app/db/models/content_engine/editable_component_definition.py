@@ -17,12 +17,12 @@ from sqlmodel import Field, Relationship
 
 from app.shared.enums import EditableComponentKind
 
-from .base import BaseModel, IsPartOfSite, IsPartOfSolution
+from app.db.models.mixins import BaseModel, IsPartOfSite, IsPartOfSolution
 
 if TYPE_CHECKING:
-    from .content_entry import ContentEntry
-    from .site import Site
-    from .solution import Solution
+    from app.db.models.content_engine.content_entry import ContentEntry
+    from app.db.models.site_management.site import Site
+    from app.db.models.site_management.solution import Solution
 
 
 # TODO: add unit tests for this model

@@ -14,10 +14,10 @@ from typing import TYPE_CHECKING, Optional
 from sqlalchemy import Index, UniqueConstraint
 from sqlmodel import Field, Relationship
 
-from .base import BaseModel
+from app.db.models.mixins import BaseModel
 
 if TYPE_CHECKING:
-    from .editable_component_definition import EditableComponentDefinition
+    from app.db.models.content_engine.editable_component_definition import EditableComponentDefinition
 
 
 # TODO: add unit tests for this model

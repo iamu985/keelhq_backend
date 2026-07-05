@@ -10,11 +10,11 @@ from uuid import UUID
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlmodel import Field, Relationship
-from .base import BaseModel
+from app.db.models.mixins import BaseModel
 
 if TYPE_CHECKING:
-    from .content_entry import ContentEntry
-    from .editable_component_definition import EditableComponentDefinition
+    from app.db.models.content_engine.content_entry import ContentEntry
+    from app.db.models.content_engine.editable_component_definition import EditableComponentDefinition
 
 
 # TODO: add unit tests for this model

@@ -1,9 +1,6 @@
-from .content_entry import ContentEntry
-from .editable_component_definition import EditableComponentDefinition
-from .local_users import LocalUser
-from .site import Site
-from .solution import Solution
-
+from .content_engine import ContentEntry, EditableComponentDefinition
+from .identity import LocalUser
+from .site_management import Site, Solution
 
 __all__ = [
     "LocalUser",

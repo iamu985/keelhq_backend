@@ -8,7 +8,7 @@ from typing import Optional
 
 from sqlmodel import Field
 
-from .base import BaseModel
+from app.db.models.mixins import BaseModel
 
 
 # TODO: add unit tests for this model

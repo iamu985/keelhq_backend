@@ -18,11 +18,11 @@ from sqlmodel import Field, Relationship
 
 from app.shared.enums import ContentStatus
 
-from .base import BaseModel, IsPartOfSite
+from app.db.models.mixins import BaseModel, IsPartOfSite
 
 if TYPE_CHECKING:
-    from .editable_component_definition import EditableComponentDefinition
-    from .site import Site
+    from app.db.models.content_engine.editable_component_definition import EditableComponentDefinition
+    from app.db.models.site_management.site import Site
 
 
 # TODO: add unit tests for this model

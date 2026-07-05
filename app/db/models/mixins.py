@@ -1,4 +1,4 @@
-"""Base SQLModel abstractions.
+"""SQLModel mixins and base model.
 
 Responsibility:
 - Provide reusable mixins and a base model for all database tables.
