@@ -15,6 +15,9 @@ from app.db.models.mixins import BaseModel
 if TYPE_CHECKING:
     from app.db.models.content_engine.content_entry import ContentEntry
     from app.db.models.content_engine.editable_component_definition import EditableComponentDefinition
+    from app.db.models.forms.form import Form
+    from app.db.models.integration.access_token import AccessToken
+    from app.db.models.media.media_asset import MediaAsset
 
 
 # TODO: add unit tests for this model
@@ -44,5 +47,23 @@ class Site(BaseModel, table=True):
         back_populates="site",
     )
     content_entries: list["ContentEntry"] = Relationship(
+        back_populates="site",
+    )
+
+    # Media relationship.
+    # A site may own many uploaded assets.
+    media_assets: list["MediaAsset"] = Relationship(
+        back_populates="site",
+    )
+
+    # Forms relationship.
+    # A site may contain many editable forms, each with its own submissions.
+    forms: list["Form"] = Relationship(
+        back_populates="site",
+    )
+
+    # Integration relationship.
+    # A site may have multiple access tokens for external tools and AI agents.
+    access_tokens: list["AccessToken"] = Relationship(
         back_populates="site",
     )

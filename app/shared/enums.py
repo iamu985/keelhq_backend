@@ -47,3 +47,20 @@ class ContentStatus(str, Enum):
 
     ARCHIVED = "archived"
     """Entry is no longer published but is retained for history."""
+
+
+class FormSubmissionStatus(str, Enum):
+    """Processing state of a form submission.
+
+    Responsibility:
+    - Track whether a submission has been reviewed or flagged.
+    """
+
+    PENDING = "pending"
+    """Submission has been received but not yet reviewed."""
+
+    PROCESSED = "processed"
+    """Submission has been reviewed and handled."""
+
+    SPAM = "spam"
+    """Submission was flagged as unsolicited or abusive."""
