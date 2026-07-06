@@ -51,7 +51,7 @@ class Settings(BaseSettings):
     version: str = VERSION
     environment: T_Environment = T_Environment.DEVELOPMENT
     database: DatabaseConfiguration
-    logging: LogConfiguration
+    logging: LogConfiguration = Field(default_factory=LogConfiguration)
 
     model_config = SettingsConfigDict(
         env_file=".env",

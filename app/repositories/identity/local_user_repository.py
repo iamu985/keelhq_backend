@@ -1,12 +1,11 @@
-from app.db.models import LocalUser
-from sqlalchemy.ext.asyncio import AsyncSession
+from typing import Optional, Sequence
 from uuid import UUID
+
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
-from typing import Any, Optional, List, Sequence
-from app.schemas.identity import CreateLocalUser, ListLocalUser, LocalUserDetail
-from app.db.models import LocalUser
-from sqlalchemy.exc import SQLAlchemyError
+
 from app.core.logger import logger
+from app.db.models import LocalUser
 
 
 class LocalUserRepository:

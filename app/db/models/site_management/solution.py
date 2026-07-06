@@ -17,7 +17,9 @@ from sqlmodel import Field, Relationship
 from app.db.models.mixins import BaseModel
 
 if TYPE_CHECKING:
-    from app.db.models.content_engine.editable_component_definition import EditableComponentDefinition
+    from app.db.models.content_engine.editable_component_definition import (
+        EditableComponentDefinition,
+    )
 
 
 # TODO: add unit tests for this model

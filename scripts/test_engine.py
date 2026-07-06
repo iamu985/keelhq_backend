@@ -1,9 +1,19 @@
+"""Manual database connectivity script.
+
+Responsibility:
+- Provide a quick way to verify the async database engine can connect and execute.
+"""
+
 import asyncio
+
+import pytest
 from sqlalchemy import text
+
 from app.db.engine import ENGINE
 
 
-async def test_connection():
+@pytest.mark.asyncio
+async def test_connection() -> None:
     async with ENGINE.connect() as conn:
         print("✅ Connection acquired.")
 
