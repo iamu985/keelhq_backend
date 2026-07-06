@@ -6,7 +6,7 @@ Responsibility:
 
 from datetime import datetime, timezone
 from typing import Optional
-from uuid import UUID, uuid4
+from uuid import UUID, uuid4,
 
 from sqlmodel import Field, SQLModel
 
