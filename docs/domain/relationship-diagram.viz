@@ -1,0 +1,52 @@
+digraph DomainRelationshipMap {
+    rankdir=TB;
+    node [shape=box, style="rounded,filled", fontname="Helvetica"];
+    edge [fontname="Helvetica", fontsize=10];
+
+    // Domain color palette
+    identity [style=invis, label="Identity"];
+    site_management [style=invis, label="Site Management"];
+    content_engine [style=invis, label="Content Engine"];
+    media [style=invis, label="Media"];
+    forms [style=invis, label="Forms"];
+    integration [style=invis, label="Integration"];
+
+    // Identity domain
+    LocalUser [fillcolor="#E1F5FE", label="LocalUser\n(Identity)"];
+
+    // Site Management domain
+    Site [fillcolor="#FFF3E0", label="Site\n(Site Management)"];
+    Solution [fillcolor="#FFF3E0", label="Solution\n(Site Management)"];
+
+    // Content Engine domain
+    EditableComponentDefinition [fillcolor="#E8F5E9", label="EditableComponentDefinition\n(Content Engine)"];
+    ContentEntry [fillcolor="#E8F5E9", label="ContentEntry\n(Content Engine)"];
+
+    // Media domain
+    MediaAsset [fillcolor="#F3E5F5", label="MediaAsset\n(Media)"];
+
+    // Forms domain
+    Form [fillcolor="#FFEBEE", label="Form\n(Forms)"];
+    FormSubmission [fillcolor="#FFEBEE", label="FormSubmission\n(Forms)"];
+
+    // Integration domain
+    AccessToken [fillcolor="#E0F2F1", label="AccessToken\n(Integration)"];
+
+    // Relationships with cardinality
+    LocalUser -> Site [label="1 : N\nowns", arrowhead=crowodot];
+    Site -> EditableComponentDefinition [label="1 : N\ndefines", arrowhead=crowodot];
+    Site -> ContentEntry [label="1 : N\ncontains", arrowhead=crowodot];
+    Site -> MediaAsset [label="1 : N\ncontains", arrowhead=crowodot];
+    Site -> Form [label="1 : N\ncontains", arrowhead=crowodot];
+    Site -> AccessToken [label="1 : N\nhas", arrowhead=crowodot];
+
+    Solution -> EditableComponentDefinition [label="1 : N\ndefines", arrowhead=crowodot];
+    EditableComponentDefinition -> ContentEntry [label="1 : N\npopulated by", arrowhead=crowodot];
+    Form -> FormSubmission [label="1 : N\nreceives", arrowhead=crowodot];
+
+    // Invisible edges for layout grouping
+    { rank=same; LocalUser }
+    { rank=same; Site; Solution }
+    { rank=same; EditableComponentDefinition; Form }
+    { rank=same; ContentEntry; MediaAsset; FormSubmission; AccessToken }
+}
