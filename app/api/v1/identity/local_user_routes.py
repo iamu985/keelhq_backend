@@ -23,6 +23,7 @@ async def create_local_user(payload: CreateLocalUser):
         )
         created_user = await repository.create(user_to_create)
         if created_user:
+            await session.commit()
             return LocalUserDetail(
                 id=created_user.id,
                 email=created_user.email,
@@ -34,3 +35,5 @@ async def create_local_user(payload: CreateLocalUser):
                 is_active=created_user.is_active,
                 is_superuser=created_user.is_superuser,
             )
+        await session.rollback()
+        return {}
