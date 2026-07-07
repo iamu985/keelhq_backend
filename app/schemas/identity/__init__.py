@@ -1,3 +1,3 @@
-from .local_user_schemas import CreateLocalUser, LocalUserDetail, ListLocalUser
+from .local_user_schemas import CreateLocalUser, LocalUserDetail
 
-__all__ = ["CreateLocalUser", "LocalUserDetail", "ListLocalUser"]
+__all__ = ["CreateLocalUser", "LocalUserDetail"]
