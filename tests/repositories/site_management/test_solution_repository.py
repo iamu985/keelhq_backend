@@ -5,7 +5,6 @@ Responsibility:
   AsyncSession so the suite stays fast and isolated from the database.
 """
 
-from typing import Sequence
 from unittest.mock import AsyncMock, MagicMock
 from uuid import UUID, uuid4
 

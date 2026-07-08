@@ -26,7 +26,9 @@ if TYPE_CHECKING:
 
 
 # TODO: add unit tests for this model
-class EditableComponentDefinition(BaseModel, IsPartOfSite, IsPartOfSolution, table=True):
+class EditableComponentDefinition(
+    BaseModel, IsPartOfSite, IsPartOfSolution, table=True
+):
     """A template describing one editable section of a site.
 
     Responsibility:
@@ -95,7 +97,13 @@ class EditableComponentDefinition(BaseModel, IsPartOfSite, IsPartOfSolution, tab
     entries: list["ContentEntry"] = Relationship(back_populates="definition")
 
     __table_args__ = (  # pyright: ignore
-        UniqueConstraint("site_id", "key", name="uq_editable_component_definitions_site_id_key"),
+        UniqueConstraint(
+            "site_id", "key", name="uq_editable_component_definitions_site_id_key"
+        ),
         Index("ix_editable_component_definitions_site_id_kind", "site_id", "kind"),
-        Index("ix_editable_component_definitions_site_id_display_order", "site_id", "display_order"),
+        Index(
+            "ix_editable_component_definitions_site_id_display_order",
+            "site_id",
+            "display_order",
+        ),
     )

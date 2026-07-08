@@ -118,7 +118,9 @@ async def test_list_by_form_with_status_filter(
     mock_result.scalars.return_value.all.return_value = [sample_submission]
     mock_session.execute.return_value = mock_result
 
-    submissions = await repository.list_by_form(FORM_ID, status=FormSubmissionStatus.PENDING)
+    submissions = await repository.list_by_form(
+        FORM_ID, status=FormSubmissionStatus.PENDING
+    )
 
     assert submissions == [sample_submission]
     mock_session.execute.assert_awaited_once()

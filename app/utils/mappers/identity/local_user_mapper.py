@@ -1,6 +1,6 @@
-from typing import Sequence
+from typing import Sequence, List
 from app.db.models import LocalUser
-from app.schemas.identity import CreateLocalUser, LocalUserDetail, ListLocalUser
+from app.schemas.identity import CreateLocalUser, LocalUserDetail
 
 
 class LocalUserMapper:
@@ -21,7 +21,7 @@ class LocalUserMapper:
         )
 
     @staticmethod
-    def to_list(users: Sequence[LocalUser]) -> ListLocalUser:
+    def to_list(users: Sequence[LocalUser]) -> List[LocalUserDetail]:
         local_users = []
         for user in users:
             user_detail = LocalUserDetail(
@@ -35,4 +35,4 @@ class LocalUserMapper:
             )
             local_users.append(user_detail)
 
-        return ListLocalUser(local_users=local_users)
+        return local_users

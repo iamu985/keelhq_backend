@@ -1,11 +1,11 @@
 from uuid import uuid4
 
 from devtools import pprint
-from app import repositories
+
 from app.db.session import SessionLocal
-from app.utils.mappers import LocalUserMapper
-from app.schemas.identity import CreateLocalUser
 from app.repositories.identity import LocalUserRepository
+from app.schemas.identity import CreateLocalUser
+from app.utils.mappers import LocalUserMapper
 
 
 def test_local_user_mapper_from_create():
@@ -13,7 +13,7 @@ def test_local_user_mapper_from_create():
         email="some@example.com",
         username="some123",
         first_name="some",
-        password_hash=uuid4(),
+        password_hash=uuid4().hex,
         middle_name=None,
         last_name=None,
     )

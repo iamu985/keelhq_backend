@@ -37,7 +37,9 @@ class ContentEntryRepository:
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
-    async def get_by_site_and_slug(self, site_id: UUID, slug: str) -> Optional[ContentEntry]:
+    async def get_by_site_and_slug(
+        self, site_id: UUID, slug: str
+    ) -> Optional[ContentEntry]:
         """Return the entry within a site that matches the given slug, or None.
 
         Slug uniqueness is scoped per site, so both site_id and slug are required.

@@ -65,7 +65,9 @@ class SolutionRepository:
         await self.session.refresh(solution)
         return solution
 
-    async def list(self, query: Optional[ListSolutionQuery] = None) -> Sequence[Solution]:
+    async def list(
+        self, query: Optional[ListSolutionQuery] = None
+    ) -> Sequence[Solution]:
         """Return all solutions, with optional filters from a ListSolutionQuery."""
         logger.info("Listing Solutions.")
         logger.debug(f"query={query}")

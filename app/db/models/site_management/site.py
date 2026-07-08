@@ -14,7 +14,9 @@ from app.db.models.mixins import BaseModel
 
 if TYPE_CHECKING:
     from app.db.models.content_engine.content_entry import ContentEntry
-    from app.db.models.content_engine.editable_component_definition import EditableComponentDefinition
+    from app.db.models.content_engine.editable_component_definition import (
+        EditableComponentDefinition,
+    )
     from app.db.models.forms.form import Form
     from app.db.models.integration.access_token import AccessToken
     from app.db.models.media.media_asset import MediaAsset
@@ -26,7 +28,10 @@ class Site(BaseModel, table=True):
 
     owner_id: UUID = Field(
         sa_column=Column(
-            PGUUID(as_uuid=True), ForeignKey("local_users.id"), nullable=False, index=True
+            PGUUID(as_uuid=True),
+            ForeignKey("local_users.id"),
+            nullable=False,
+            index=True,
         ),
     )
     name: str = Field(nullable=False)

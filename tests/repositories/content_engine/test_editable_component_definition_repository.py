@@ -140,7 +140,9 @@ async def test_list_by_site_no_filter(
     mock_result.scalars.return_value.all.return_value = [sample_definition]
     mock_session.execute.return_value = mock_result
 
-    definitions: Sequence[EditableComponentDefinition] = await repository.list_by_site(SITE_ID)
+    definitions: Sequence[EditableComponentDefinition] = await repository.list_by_site(
+        SITE_ID
+    )
 
     assert definitions == [sample_definition]
     mock_session.execute.assert_awaited_once()
@@ -156,7 +158,9 @@ async def test_list_by_site_with_kind_filter(
     mock_result.scalars.return_value.all.return_value = [sample_definition]
     mock_session.execute.return_value = mock_result
 
-    definitions = await repository.list_by_site(SITE_ID, kind=EditableComponentKind.SINGLETON)
+    definitions = await repository.list_by_site(
+        SITE_ID, kind=EditableComponentKind.SINGLETON
+    )
 
     assert definitions == [sample_definition]
     mock_session.execute.assert_awaited_once()

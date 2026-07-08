@@ -54,11 +54,11 @@ class TimestampMixin(SQLModel, table=False):
 
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc),
-        sa_type=DateTime(timezone=True),
+        sa_type=DateTime(timezone=True),  # type: ignore[call-overload]
     )
     updated_at: Optional[datetime] = Field(
         default_factory=lambda: datetime.now(timezone.utc),
-        sa_type=DateTime(timezone=True),
+        sa_type=DateTime(timezone=True),  # type: ignore[call-overload]
     )
 
 

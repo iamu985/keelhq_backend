@@ -13,7 +13,9 @@ import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models import ContentEntry
-from app.repositories.content_engine.content_entry_repository import ContentEntryRepository
+from app.repositories.content_engine.content_entry_repository import (
+    ContentEntryRepository,
+)
 from app.shared.enums import ContentStatus
 
 
@@ -216,7 +218,9 @@ async def test_list_by_definition_with_status(
     mock_result.scalars.return_value.all.return_value = [sample_entry]
     mock_session.execute.return_value = mock_result
 
-    entries = await repository.list_by_definition(DEFINITION_ID, status=ContentStatus.PUBLISHED)
+    entries = await repository.list_by_definition(
+        DEFINITION_ID, status=ContentStatus.PUBLISHED
+    )
 
     assert entries == [sample_entry]
     mock_session.execute.assert_awaited_once()

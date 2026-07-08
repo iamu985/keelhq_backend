@@ -21,7 +21,9 @@ from app.shared.enums import ContentStatus
 from app.db.models.mixins import BaseModel, IsPartOfSite
 
 if TYPE_CHECKING:
-    from app.db.models.content_engine.editable_component_definition import EditableComponentDefinition
+    from app.db.models.content_engine.editable_component_definition import (
+        EditableComponentDefinition,
+    )
     from app.db.models.site_management.site import Site
 
 
@@ -96,6 +98,8 @@ class ContentEntry(BaseModel, IsPartOfSite, table=True):
         UniqueConstraint("site_id", "slug", name="uq_content_entries_site_id_slug"),
         Index("ix_content_entries_site_id_status", "site_id", "status"),
         Index("ix_content_entries_definition_id_status", "definition_id", "status"),
-        Index("ix_content_entries_definition_id_sort_order", "definition_id", "sort_order"),
+        Index(
+            "ix_content_entries_definition_id_sort_order", "definition_id", "sort_order"
+        ),
         Index("ix_content_entries_title", "title"),
     )

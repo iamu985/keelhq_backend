@@ -1,11 +1,10 @@
 from uuid import UUID
+
 from fastapi import APIRouter
-from pydantic import Secret
-from app import repositories
-from app.db.models.identity.local_user import LocalUser
-from app.schemas.identity import CreateLocalUser, LocalUserDetail
-from app.repositories.identity import LocalUserRepository
+
 from app.db.session import SessionLocal
+from app.repositories.identity import LocalUserRepository
+from app.schemas.identity import CreateLocalUser
 from app.utils.mappers import LocalUserMapper
 
 router = APIRouter(prefix="/local-user")
