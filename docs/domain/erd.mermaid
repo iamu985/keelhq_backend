@@ -1,0 +1,137 @@
+erDiagram
+    %% This diagram highlights primary keys (PK) and foreign keys (FK) only.
+    %% Detailed indexes, unique constraints, and nullable rules are documented
+    %% in the per-model tables in docs/domain/DOMAIN.md.
+    %% Identity
+    local_users {
+        uuid id PK
+        text email
+        text username
+        text password_hash
+        text first_name
+        text middle_name
+        text last_name
+        boolean is_active
+        boolean is_superuser
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    %% Site Management
+    sites {
+        uuid id PK
+        uuid owner_id FK
+        text name
+        text slug
+        text description
+        text logo_url
+        text status
+        text visibility
+        uuid extension_id
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    solutions {
+        uuid id PK
+        text name
+        text slug
+        text display_name
+        text description
+        text icon
+        text version
+        boolean is_builtin
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    %% Content Engine
+    editable_component_definitions {
+        uuid id PK
+        uuid site_id FK
+        uuid solution_id FK
+        text key
+        text display_name
+        jsonb editor_schema
+        enum kind
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    content_entries {
+        uuid id PK
+        uuid site_id FK
+        uuid definition_id FK
+        jsonb content
+        enum status
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    %% Media
+    media_assets {
+        uuid id PK
+        uuid site_id FK
+        text filename
+        text storage_key
+        text mime_type
+        text extension
+        integer size
+        integer width
+        integer height
+        text alt_text
+        jsonb metadata
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    %% Forms
+    forms {
+        uuid id PK
+        uuid site_id FK
+        text name
+        text slug
+        text description
+        jsonb schema
+        jsonb settings
+        boolean is_active
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    form_submissions {
+        uuid id PK
+        uuid form_id FK
+        jsonb payload
+        enum status
+        timestamp submitted_at
+        text ip_address
+        text user_agent
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    %% Integration
+    access_tokens {
+        uuid id PK
+        uuid site_id FK
+        text name
+        text description
+        text token_hash
+        timestamp last_used_at
+        timestamp expires_at
+        boolean is_active
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    %% Relationships
+    local_users ||--o{ sites : owns
+    sites ||--o{ editable_component_definitions : defines
+    sites ||--o{ content_entries : contains
+    sites ||--o{ media_assets : contains
+    sites ||--o{ forms : contains
+    sites ||--o{ access_tokens : has
+    solutions ||--o{ editable_component_definitions : defines
+    editable_component_definitions ||--o{ content_entries : populated_by
+    forms ||--o{ form_submissions : receives

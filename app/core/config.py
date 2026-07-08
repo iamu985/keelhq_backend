@@ -1,6 +1,7 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import BaseModel, Field, SecretStr
+from pydantic import BaseModel, Field, SecretStr, field_validator
 from enum import StrEnum
+from pathlib import Path
 
 VERSION = "0.1.0"
 
@@ -8,6 +9,30 @@ VERSION = "0.1.0"
 class T_Environment(StrEnum):
     PRODUCTION = "production"
     DEVELOPMENT = "development"
+
+
+class LogLevel(StrEnum):
+    DEBUG = "debug"
+    INFO = "info"
+    WARNING = "warning"
+    ERROR = "error"
+    EXCEPTION = "exception"
+    CRITICAL = "critical"
+
+
+class LogConfiguration(BaseModel):
+    level: LogLevel = Field(default=LogLevel.DEBUG)
+    directory: Path = Field(default=Path("../../logs/"))
+    retention: str = "10 Days"
+    rotation: str = "10 MB"
+    backtrace: bool = True
+    enqueue: bool = True
+
+    @field_validator("directory")
+    @classmethod
+    def ensure_directory(cls, source: Path) -> Path:
+        source.expanduser().mkdir(exist_ok=True, parents=True)
+        return source.expanduser().resolve()
 
 
 class DatabaseConfiguration(BaseModel):
@@ -26,6 +51,7 @@ class Settings(BaseSettings):
     version: str = VERSION
     environment: T_Environment = T_Environment.DEVELOPMENT
     database: DatabaseConfiguration
+    logging: LogConfiguration = Field(default_factory=LogConfiguration)
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -34,4 +60,4 @@ class Settings(BaseSettings):
     )
 
 
-settings = Settings()  # pyright: ignore
+settings = Settings()  # type: ignore[call-arg]

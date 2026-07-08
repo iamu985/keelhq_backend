@@ -3,10 +3,16 @@ import asyncio
 from devtools import pprint
 from scripts.test_engine import test_connection
 from scripts.test_settings import test_settings
+from scripts.test_data_mapper import (
+    test_localUserMapper_toList,
+    test_local_user_mapper_from_create,
+)
 
 RUNNERS = {
     "test_connection": [test_connection, True],
     "test_settings": [test_settings, False],
+    "test_localUserMapper_fromCreate": [test_local_user_mapper_from_create, False],
+    "test_localUserMapper_toList": [test_localUserMapper_toList, True],
 }
 
 

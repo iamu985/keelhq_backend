@@ -1,0 +1,44 @@
+erDiagram
+    %% Identity domain
+    LocalUser {
+    }
+
+    %% Site Management domain
+    Site {
+    }
+
+    Solution {
+    }
+
+    %% Content Engine domain
+    EditableComponentDefinition {
+    }
+
+    ContentEntry {
+    }
+
+    %% Media domain
+    MediaAsset {
+    }
+
+    %% Forms domain
+    Form {
+    }
+
+    FormSubmission {
+    }
+
+    %% Integration domain
+    AccessToken {
+    }
+
+    %% Relationships
+    LocalUser ||--o{ Site : owns
+    Site ||--o{ EditableComponentDefinition : defines
+    Site ||--o{ ContentEntry : contains
+    Site ||--o{ MediaAsset : contains
+    Site ||--o{ Form : contains
+    Site ||--o{ AccessToken : has
+    Solution ||--o{ EditableComponentDefinition : defines
+    EditableComponentDefinition ||--o{ ContentEntry : populated_by
+    Form ||--o{ FormSubmission : receives
