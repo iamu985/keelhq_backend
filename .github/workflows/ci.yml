@@ -1,0 +1,46 @@
+name: KeelHQ Backend CI
+
+on:
+  push:
+    branches: [ "main", "development" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        enable-cache: true
+        python-version: "3.12"
+
+    - name: Install dependencies
+      run: uv sync --frozen
+
+    - name: Lint with Ruff
+      run: uv run ruff check .
+
+    - name: Check formatting with Ruff
+      run: uv run ruff format --check .
+
+    - name: Type check with mypy
+      run: uv run mypy .
+
+    - name: Run tests with pytest
+      env:
+        APP_DATABASE__USERNAME: postgres
+        APP_DATABASE__PASSWORD: dummy_password
+        APP_DATABASE__HOST: localhost
+        APP_DATABASE__DATABASE: keelhq_test
+        APP_DATABASE__PORT: 5432
+        PYTHONPATH: .
+      run: uv run pytest
