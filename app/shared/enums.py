@@ -8,7 +8,48 @@ schema. They are intentionally simple `str` enums so they serialize cleanly to
 PostgreSQL and to JSON without surprising callers.
 """
 
-from enum import Enum
+from enum import Enum, StrEnum
+
+
+class SiteVisibility(StrEnum):
+    """
+    Classification of Site's visibility.
+
+    Responsibility:
+    - Tell user and the dashboard/backend who can see the site.
+    """
+
+    PUBLIC = "public"
+    """
+    Site is public and everyone can visit the site.
+    """
+
+    PRIVATE = "private"
+    """Site is private and requires authentication or role/permission"""
+
+    UNLISTED = "unlisted"
+    """Site is visible only to the people who has access to the private link"""
+
+
+class SiteStatus(StrEnum):
+    """
+    Classification of Site's Status
+    """
+
+    DRAFT = "draft"
+    """Site is still in development phase"""
+
+    ACTIVE = "active"
+    """Site is now active and can be used."""
+
+    SUSPENDED = "suspended"
+    """Site is disabled by owner/admin"""
+
+    ARCHIVED = "archived"
+    """Site is archived for history"""
+
+    DELETED = "deleted"
+    """Site is deleted by the owner or admin - soft delete"""
 
 
 class EditableComponentKind(str, Enum):

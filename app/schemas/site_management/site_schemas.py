@@ -9,6 +9,7 @@ from typing import Optional
 from uuid import UUID
 
 from pydantic import BaseModel
+from app.shared.enums import SiteStatus, SiteVisibility
 
 
 class CreateSite(BaseModel):
@@ -23,9 +24,18 @@ class CreateSite(BaseModel):
     slug: str
     description: Optional[str] = None
     logo_url: Optional[str] = None
-    status: str
-    visibility: str
+    status: SiteStatus
+    visibility: SiteVisibility
     extension_id: Optional[UUID] = None
+
+
+class SiteResponse(BaseModel):
+    name: str
+    slug: str
+    description: Optional[str] = None
+    logo_url: Optional[str] = None
+    status: SiteStatus
+    visibility: SiteVisibility
 
 
 class ListSiteQuery(BaseModel):
@@ -36,5 +46,5 @@ class ListSiteQuery(BaseModel):
     """
 
     owner_id: Optional[UUID] = None
-    status: Optional[str] = None
-    visibility: Optional[str] = None
+    status: Optional[SiteStatus] = None
+    visibility: Optional[SiteVisibility] = None
