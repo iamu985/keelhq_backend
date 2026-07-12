@@ -9,9 +9,9 @@ from fastapi import APIRouter, FastAPI, HTTPException
 from fastapi.testclient import TestClient
 from pydantic import BaseModel, field_validator
 
-from app.api.errors import register_exception_handlers
-from app.exceptions import DomainError
-from app.exceptions.identity import (
+from keelhq.api.errors import register_exception_handlers
+from keelhq.exceptions import DomainError
+from keelhq.exceptions.identity import (
     EmailAlreadyExistsError,
     UsernameAlreadyExistsError,
 )

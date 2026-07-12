@@ -11,19 +11,19 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 from pydantic import SecretStr
 
-from app.core.unit_of_work import AbstractUnitOfWork
-from app.db.models import LocalUser
-from app.exceptions.identity import (
+from keelhq.core.unit_of_work import AbstractUnitOfWork
+from keelhq.db.models import LocalUser
+from keelhq.exceptions.identity import (
     EmailAlreadyExistsError,
     UsernameAlreadyExistsError,
 )
-from app.repositories.identity.local_user_repository import LocalUserRepository
-from app.schemas.identity.registration_schemas import (
+from keelhq.repositories.identity.local_user_repository import LocalUserRepository
+from keelhq.schemas.identity.registration_schemas import (
     RegisterNewUserRequest,
     RegistrationSuccessfulResponse,
 )
-from app.services.password_service import PasswordService
-from app.services.registration_service import RegistrationService
+from keelhq.services.password_service import PasswordService
+from keelhq.services.registration_service import RegistrationService
 
 
 class FakeUnitOfWork(AbstractUnitOfWork):

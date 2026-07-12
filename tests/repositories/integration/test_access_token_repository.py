@@ -13,8 +13,8 @@ from uuid import UUID, uuid4
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.models import AccessToken
-from app.repositories.integration.access_token_repository import AccessTokenRepository
+from keelhq.db.models import AccessToken
+from keelhq.repositories.integration.access_token_repository import AccessTokenRepository
 
 SITE_ID = UUID("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
 TOKEN_HASH = "sha256-abc123"

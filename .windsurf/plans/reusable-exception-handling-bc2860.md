@@ -17,19 +17,19 @@ Implement a reusable exception handling layer that maps KeelHQ domain exceptions
 
 | File | Action |
 |---|---|
-| `app/exceptions/__init__.py` | Add `status_code`, `error_code`, `default_message` class attributes to `KeelException` and set defaults on `DomainError`, `InfrastructureError`, `ApplicationError` |
-| `app/exceptions/identity/base.py` | Set `IdentityError` defaults (`400`) so identity errors have a sensible fallback |
-| `app/exceptions/identity/registration_exceptions.py` | Add `RegistrationError` base; make `UsernameAlreadyExistsError` and `EmailAlreadyExistsError` set `status_code=409` and explicit `error_code` |
-| `app/api/errors.py` (new) | Build the JSON response, implement `KeelException` and catch-all `Exception` handlers, export `register_exception_handlers` |
+| `keelhq/exceptions/__init__.py` | Add `status_code`, `error_code`, `default_message` class attributes to `KeelException` and set defaults on `DomainError`, `InfrastructureError`, `ApplicationError` |
+| `keelhq/exceptions/identity/base.py` | Set `IdentityError` defaults (`400`) so identity errors have a sensible fallback |
+| `keelhq/exceptions/identity/registration_exceptions.py` | Add `RegistrationError` base; make `UsernameAlreadyExistsError` and `EmailAlreadyExistsError` set `status_code=409` and explicit `error_code` |
+| `keelhq/api/errors.py` (new) | Build the JSON response, implement `KeelException` and catch-all `Exception` handlers, export `register_exception_handlers` |
 | `server.py` | Call `register_exception_handlers(app)` after router inclusion |
 | `tests/core/test_exception_handlers.py` (new) | Test 409 mapping for registration errors, 400 fallback for unmapped `DomainError`, and 500 catch-all |
-| `app/api/v1/identity/registration_routes.py` | No route-level try/except needed; handler converts domain errors automatically |
+| `keelhq/api/v1/identity/registration_routes.py` | No route-level try/except needed; handler converts domain errors automatically |
 
 ## Implementation steps
 
 ### 1. Attach HTTP metadata to the exception hierarchy
 
-In `app/exceptions/__init__.py`, make `KeelException` carry declarative HTTP metadata:
+In `keelhq/exceptions/__init__.py`, make `KeelException` carry declarative HTTP metadata:
 
 ```python
 class KeelException(Exception):
@@ -61,7 +61,7 @@ class ApplicationError(KeelException):
 
 ### 2. Update identity and registration exceptions
 
-In `app/exceptions/identity/base.py`:
+In `keelhq/exceptions/identity/base.py`:
 
 ```python
 class IdentityError(DomainError):
@@ -70,7 +70,7 @@ class IdentityError(DomainError):
     default_message: str = "Identity operation failed."
 ```
 
-In `app/exceptions/identity/registration_exceptions.py`:
+In `keelhq/exceptions/identity/registration_exceptions.py`:
 
 ```python
 class RegistrationError(IdentityError):
@@ -93,14 +93,14 @@ class EmailAlreadyExistsError(RegistrationError):
 
 ### 3. Build the response and handlers
 
-In `app/api/errors.py`:
+In `keelhq/api/errors.py`:
 
 ```python
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from app.core.logger import logger
-from app.exceptions import KeelException
+from keelhq.core.logger import logger
+from keelhq.exceptions import KeelException
 
 
 async def keel_exception_handler(request: Request, exc: KeelException) -> JSONResponse:

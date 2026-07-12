@@ -8,7 +8,7 @@ Responsibility:
 import pytest
 from pydantic import SecretStr, ValidationError
 
-from app.schemas.identity.registration_schemas import RegisterNewUserRequest
+from keelhq.schemas.identity.registration_schemas import RegisterNewUserRequest
 
 VALID_USERNAME = "valid_user"
 VALID_EMAIL = "user@example.com"

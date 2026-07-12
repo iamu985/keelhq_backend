@@ -12,9 +12,9 @@ from uuid import UUID, uuid4
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.models import Solution
-from app.repositories.site_management.solution_repository import SolutionRepository
-from app.schemas.site_management.solution_schemas import ListSolutionQuery
+from keelhq.db.models import Solution
+from keelhq.repositories.site_management.solution_repository import SolutionRepository
+from keelhq.schemas.site_management.solution_schemas import ListSolutionQuery
 
 
 @pytest.fixture

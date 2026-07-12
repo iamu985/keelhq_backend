@@ -13,8 +13,8 @@ from uuid import UUID, uuid4
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.models import MediaAsset
-from app.repositories.media.media_asset_repository import MediaAssetRepository
+from keelhq.db.models import MediaAsset
+from keelhq.repositories.media.media_asset_repository import MediaAssetRepository
 
 SITE_ID = UUID("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
 STORAGE_KEY = "uploads/2024/hero.jpg"

@@ -13,9 +13,9 @@ from uuid import UUID, uuid4
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.models import FormSubmission
-from app.repositories.forms.form_submission_repository import FormSubmissionRepository
-from app.shared.enums import FormSubmissionStatus
+from keelhq.db.models import FormSubmission
+from keelhq.repositories.forms.form_submission_repository import FormSubmissionRepository
+from keelhq.shared.enums import FormSubmissionStatus
 
 FORM_ID = UUID("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
 

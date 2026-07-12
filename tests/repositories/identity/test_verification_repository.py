@@ -14,8 +14,8 @@ from uuid import UUID, uuid4
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.models import VerificationCode
-from app.repositories.identity.verification_repository import VerificationCodeRepository
+from keelhq.db.models import VerificationCode
+from keelhq.repositories.identity.verification_repository import VerificationCodeRepository
 
 
 @pytest.fixture

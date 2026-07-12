@@ -13,8 +13,8 @@ from uuid import UUID, uuid4
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.models import Form
-from app.repositories.forms.form_repository import FormRepository
+from keelhq.db.models import Form
+from keelhq.repositories.forms.form_repository import FormRepository
 
 SITE_ID = UUID("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
 

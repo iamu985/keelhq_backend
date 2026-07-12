@@ -14,13 +14,13 @@ from fastapi import FastAPI
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncEngine
 
-from app.api.deps import get_registration_service
-from app.api.v1.identity import router as identity_router
-from app.core.lifespan import lifespan
-from app.schemas.identity.registration_schemas import (
+from keelhq.api.deps import get_registration_service
+from keelhq.api.v1.identity import router as identity_router
+from keelhq.core.lifespan import lifespan
+from keelhq.schemas.identity.registration_schemas import (
     RegistrationSuccessfulResponse,
 )
-from app.services.registration_service import RegistrationService
+from keelhq.services.registration_service import RegistrationService
 
 
 @pytest.fixture
@@ -37,7 +37,7 @@ async def client(app: FastAPI) -> AsyncIterator[AsyncClient]:
     mock_engine = MagicMock(spec=AsyncEngine)
     mock_engine.dispose = AsyncMock()
 
-    with patch("app.core.lifespan.create_engine", return_value=mock_engine):
+    with patch("keelhq.core.lifespan.create_engine", return_value=mock_engine):
         async with AsyncClient(
             transport=ASGITransport(app=app),
             base_url="http://test",

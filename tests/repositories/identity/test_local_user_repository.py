@@ -13,8 +13,8 @@ from uuid import UUID, uuid4
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.models import LocalUser
-from app.repositories.identity.local_user_repository import LocalUserRepository
+from keelhq.db.models import LocalUser
+from keelhq.repositories.identity.local_user_repository import LocalUserRepository
 
 
 @pytest.fixture

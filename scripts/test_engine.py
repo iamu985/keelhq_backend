@@ -9,7 +9,7 @@ import asyncio
 import pytest
 from sqlalchemy import text
 
-from app.db.engine import create_engine
+from keelhq.db.engine import create_engine
 
 
 @pytest.mark.asyncio

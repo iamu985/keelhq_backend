@@ -13,11 +13,11 @@ from uuid import UUID, uuid4
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.models import ContentEntry
-from app.repositories.content_engine.content_entry_repository import (
+from keelhq.db.models import ContentEntry
+from keelhq.repositories.content_engine.content_entry_repository import (
     ContentEntryRepository,
 )
-from app.shared.enums import ContentStatus
+from keelhq.shared.enums import ContentStatus
 
 SITE_ID = UUID("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
 DEFINITION_ID = UUID("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb")

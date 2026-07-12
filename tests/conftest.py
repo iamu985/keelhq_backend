@@ -7,7 +7,7 @@ Responsibility:
 import pytest
 from fastapi import FastAPI
 
-from app.core.lifespan import lifespan
+from keelhq.core.lifespan import lifespan
 
 
 @pytest.fixture

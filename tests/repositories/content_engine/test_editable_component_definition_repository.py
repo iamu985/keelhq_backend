@@ -13,11 +13,11 @@ from uuid import UUID, uuid4
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.models import EditableComponentDefinition
-from app.repositories.content_engine.editable_component_definition_repository import (
+from keelhq.db.models import EditableComponentDefinition
+from keelhq.repositories.content_engine.editable_component_definition_repository import (
     EditableComponentDefinitionRepository,
 )
-from app.shared.enums import EditableComponentKind
+from keelhq.shared.enums import EditableComponentKind
 
 SITE_ID = UUID("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
 SOLUTION_ID = UUID("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb")

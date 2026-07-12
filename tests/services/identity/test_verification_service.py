@@ -11,14 +11,14 @@ from uuid import UUID, uuid4
 
 import pytest
 
-from app.db.models import VerificationCode
-from app.exceptions.identity import (
+from keelhq.db.models import VerificationCode
+from keelhq.exceptions.identity import (
     VerificationCodeExpiredError,
     VerificationCodeGenerationError,
     VerificationCodeNotFoundError,
 )
-from app.repositories.identity.verification_repository import VerificationCodeRepository
-from app.services.verification_service import VerificationService
+from keelhq.repositories.identity.verification_repository import VerificationCodeRepository
+from keelhq.services.verification_service import VerificationService
 
 
 @pytest.fixture

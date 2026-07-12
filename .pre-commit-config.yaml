@@ -25,4 +25,4 @@ repos:
         stages: [pre-commit]
         pass_filenames: false
         always_run: true
-        args: [--cov=app, --cov-fail-under=75] # Set your coverage threshold
+        args: [--cov=keelhq, --cov-fail-under=75] # Set your coverage threshold

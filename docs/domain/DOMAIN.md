@@ -24,10 +24,10 @@ This document describes the entire Keel database domain model. It is intended to
 
 ## Architecture Overview
 
-The domain model is organized into six bounded contexts under `app/db/models`:
+The domain model is organized into six bounded contexts under `keelhq/db/models`:
 
 ```text
-app/db/models/
+keelhq/db/models/
 ├── identity/                 # LocalUser
 ├── site_management/          # Site, Solution
 ├── content_engine/           # EditableComponentDefinition, ContentEntry
@@ -42,7 +42,7 @@ Every table model inherits from `BaseModel` (`UUIDMixin` + `TimestampMixin`) and
 - `created_at` (`datetime`, UTC, auto-set on insert)
 - `updated_at` (`datetime`, UTC, nullable)
 
-Cross-domain references are defined via explicit SQLModel `Relationship` fields and use `TYPE_CHECKING` imports to avoid circular dependencies. This keeps the domain layer decoupled while still allowing SQLAlchemy to resolve mappers when the full model graph is loaded through `app.db.base`.
+Cross-domain references are defined via explicit SQLModel `Relationship` fields and use `TYPE_CHECKING` imports to avoid circular dependencies. This keeps the domain layer decoupled while still allowing SQLAlchemy to resolve mappers when the full model graph is loaded through `keelhq.db.base`.
 
 ---
 
@@ -50,7 +50,7 @@ Cross-domain references are defined via explicit SQLModel `Relationship` fields 
 
 ### Base Mixins
 
-Located in `app/db/models/mixins.py`.
+Located in `keelhq/db/models/mixins.py`.
 
 | Mixin | Responsibility | Fields Added |
 |-------|---------------|--------------|
@@ -62,7 +62,7 @@ Located in `app/db/models/mixins.py`.
 
 ### Shared Enumerations
 
-Located in `app/shared/enums.py`.
+Located in `keelhq/shared/enums.py`.
 
 #### `EditableComponentKind`
 
@@ -101,7 +101,7 @@ Review state of a `FormSubmission`.
 
 #### `LocalUser`
 
-**Module:** `app/db/models/identity/local_user.py`  
+**Module:** `keelhq/db/models/identity/local_user.py`  
 **Table:** `local_users`
 
 Development-only local authentication account. A user can own many sites.
@@ -130,7 +130,7 @@ Development-only local authentication account. A user can own many sites.
 
 #### `Site`
 
-**Module:** `app/db/models/site_management/site.py`  
+**Module:** `keelhq/db/models/site_management/site.py`  
 **Table:** `sites`
 
 A site is the central tenant of Keel. Almost every other entity belongs to a site.
@@ -160,7 +160,7 @@ A site is the central tenant of Keel. Almost every other entity belongs to a sit
 
 #### `Solution`
 
-**Module:** `app/db/models/site_management/solution.py`  
+**Module:** `keelhq/db/models/site_management/solution.py`  
 **Table:** `solutions`
 
 A reusable website template that defines which editable sections should exist. It is content-agnostic; actual values live in `ContentEntry`.
@@ -188,7 +188,7 @@ A reusable website template that defines which editable sections should exist. I
 
 #### `EditableComponentDefinition`
 
-**Module:** `app/db/models/content_engine/editable_component_definition.py`  
+**Module:** `keelhq/db/models/content_engine/editable_component_definition.py`  
 **Table:** `editable_component_definitions`
 
 Defines a template for an editable section of a site. It tells the dashboard what fields exist and how to render the editor.
@@ -213,7 +213,7 @@ Defines a template for an editable section of a site. It tells the dashboard wha
 
 #### `ContentEntry`
 
-**Module:** `app/db/models/content_engine/content_entry.py`  
+**Module:** `keelhq/db/models/content_engine/content_entry.py`  
 **Table:** `content_entries`
 
 Stores the actual user-generated content for an editable component.
@@ -239,7 +239,7 @@ Stores the actual user-generated content for an editable component.
 
 #### `MediaAsset`
 
-**Module:** `app/db/models/media/media_asset.py`  
+**Module:** `keelhq/db/models/media/media_asset.py`  
 **Table:** `media_assets`
 
 Metadata for an uploaded file. The bytes live in an external storage provider (S3, R2, etc.).
@@ -277,7 +277,7 @@ Metadata for an uploaded file. The bytes live in an external storage provider (S
 
 #### `Form`
 
-**Module:** `app/db/models/forms/form.py`  
+**Module:** `keelhq/db/models/forms/form.py`  
 **Table:** `forms`
 
 An editable form on a site. The field definitions are stored in the `schema` column and the submitted values in `FormSubmission.payload`.
@@ -309,7 +309,7 @@ An editable form on a site. The field definitions are stored in the `schema` col
 
 #### `FormSubmission`
 
-**Module:** `app/db/models/forms/form_submission.py`  
+**Module:** `keelhq/db/models/forms/form_submission.py`  
 **Table:** `form_submissions`
 
 A single visitor submission for a form.
@@ -340,7 +340,7 @@ A single visitor submission for a form.
 
 #### `AccessToken`
 
-**Module:** `app/db/models/integration/access_token.py`  
+**Module:** `keelhq/db/models/integration/access_token.py`  
 **Table:** `access_tokens`
 
 A secure API/MCP access token scoped to a site. Only the hash is stored; the raw token is never persisted.
@@ -404,7 +404,7 @@ A physical view of the tables, columns, and foreign keys. See the diagram files 
 
 ```python
 from sqlmodel import Session
-from app.db.models import LocalUser, Site
+from keelhq.db.models import LocalUser, Site
 
 owner = LocalUser(
     email="alice@example.com",
@@ -430,8 +430,8 @@ with Session(engine) as session:
 ### Adding a content entry
 
 ```python
-from app.db.models import EditableComponentDefinition, ContentEntry
-from app.shared.enums import ContentStatus
+from keelhq.db.models import EditableComponentDefinition, ContentEntry
+from keelhq.shared.enums import ContentStatus
 
 hero = EditableComponentDefinition(
     site=site,
@@ -451,8 +451,8 @@ entry = ContentEntry(
 ### Collecting a form submission
 
 ```python
-from app.db.models import Form, FormSubmission
-from app.shared.enums import FormSubmissionStatus
+from keelhq.db.models import Form, FormSubmission
+from keelhq.shared.enums import FormSubmissionStatus
 
 contact_form = Form(
     site=site,
@@ -471,7 +471,7 @@ submission = FormSubmission(
 
 ```python
 from sqlmodel import select
-from app.db.models import MediaAsset
+from keelhq.db.models import MediaAsset
 
 statement = select(MediaAsset).where(MediaAsset.site_id == site.id)
 assets = session.exec(statement).all()
@@ -483,7 +483,7 @@ assets = session.exec(statement).all()
 
 1. **Primary keys:** Every table uses a UUID primary key generated by `uuid4()`. Avoid exposing sequential integers to the frontend or URLs.
 2. **Timestamps:** `created_at` and `updated_at` come from `TimestampMixin`. `updated_at` is not automatically refreshed by the mixin; set it explicitly in update paths or use an SQLAlchemy event.
-3. **Cross-domain imports:** Use `TYPE_CHECKING` for type hints and absolute imports across domains to avoid circular imports. Runtime references in `Relationship` are string annotations and are resolved by SQLAlchemy when `app.db.base` is loaded.
+3. **Cross-domain imports:** Use `TYPE_CHECKING` for type hints and absolute imports across domains to avoid circular imports. Runtime references in `Relationship` are string annotations and are resolved by SQLAlchemy when `keelhq.db.base` is loaded.
 4. **JSONB columns:** `editor_schema`, `content`, `schema`, `settings`, `payload`, `metadata`, and other flexible data use PostgreSQL `JSONB`. Treat them as validated at the application layer, not the database layer.
 5. **Reserved attribute names:**
    - `Form.schema` is exposed as the Python attribute `field_schema` because `schema` is reserved by SQLAlchemy/SQLModel. The column remains `schema`.
@@ -491,7 +491,7 @@ assets = session.exec(statement).all()
 6. **No raw secrets:** `AccessToken` stores only `token_hash`. Generate the raw token once, return it to the caller, and never persist it.
 7. **Soft deletion:** Deletion is not always implemented as a separate `is_deleted` flag. Check each model's active flags (e.g., `ContentStatus.ARCHIVED`, `is_active`, `FormSubmissionStatus`) for domain-specific soft-delete behavior.
 8. **Indexes:** FK columns, status fields, slugs, and commonly filtered columns are indexed. Unique constraints are explicit and named.
-9. **Single source of metadata:** `app.db.base` imports every model so that SQLModel's `metadata` is complete for Alembic. When adding a new model, import it there and update `app.db.models.__init__`.
+9. **Single source of metadata:** `keelhq.db.base` imports every model so that SQLModel's `metadata` is complete for Alembic. When adding a new model, import it there and update `keelhq.db.models.__init__`.
 
 ## Relationship Diagram
 ```mermaid

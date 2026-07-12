@@ -12,8 +12,8 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker
 
-from app.core.lifespan import lifespan
-from app.services.password_service import PasswordService
+from keelhq.core.lifespan import lifespan
+from keelhq.services.password_service import PasswordService
 
 
 # TODO: add unit tests for error handling during startup/shutdown once relevant.
@@ -25,7 +25,7 @@ async def test_lifespan_initializes_and_disposes_engine() -> None:
 
     app = FastAPI(lifespan=lifespan)
 
-    with patch("app.core.lifespan.create_engine", return_value=mock_engine):
+    with patch("keelhq.core.lifespan.create_engine", return_value=mock_engine):
         with TestClient(app):
             assert app.state.engine is mock_engine
             assert isinstance(app.state.session_factory, async_sessionmaker)

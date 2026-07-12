@@ -13,10 +13,10 @@ from uuid import UUID, uuid4
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.models import Site
-from app.repositories.site_management.site_repository import SiteRepository
-from app.schemas.site_management.site_schemas import ListSiteQuery
-from app.shared.enums import SiteStatus
+from keelhq.db.models import Site
+from keelhq.repositories.site_management.site_repository import SiteRepository
+from keelhq.schemas.site_management.site_schemas import ListSiteQuery
+from keelhq.shared.enums import SiteStatus
 
 
 @pytest.fixture
