@@ -1,6 +1,7 @@
 from .base import IdentityError
 from .registration_exceptions import (
     EmailAlreadyExistsError,
+    RegistrationError,
     UsernameAlreadyExistsError,
 )
 from .verification_code_exceptions import (
@@ -12,6 +13,7 @@ from .verification_code_exceptions import (
 
 __all__ = [
     "IdentityError",
+    "RegistrationError",
     "EmailAlreadyExistsError",
     "UsernameAlreadyExistsError",
     "VerificationCodeAlreadyUsedError",
