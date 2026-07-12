@@ -12,12 +12,16 @@ from app.schemas.identity.registration_schemas import RegisterNewUserRequest
 
 VALID_USERNAME = "valid_user"
 VALID_EMAIL = "user@example.com"
+VALID_FIRST_NAME = "Frank"
+VALID_LAST_NAME = "Castle"
 VALID_PASSWORD = "Secret123!"
 
 
 def _make_request(
     username: str = VALID_USERNAME,
     email: str = VALID_EMAIL,
+    first_name: str = VALID_FIRST_NAME,
+    last_name: str | None = VALID_LAST_NAME,
     password: str = VALID_PASSWORD,
     password_confirm: str = VALID_PASSWORD,
 ) -> RegisterNewUserRequest:
@@ -25,6 +29,8 @@ def _make_request(
     return RegisterNewUserRequest(
         username=username,
         email=email,
+        first_name=first_name,
+        last_name=last_name,
         password=SecretStr(password),
         password_confirm=SecretStr(password_confirm),
     )
@@ -37,6 +43,8 @@ def test_valid_register_new_user_request() -> None:
 
     assert request.username == VALID_USERNAME
     assert str(request.email) == VALID_EMAIL
+    assert request.first_name == VALID_FIRST_NAME
+    assert request.last_name == VALID_LAST_NAME
     assert request.password.get_secret_value() == VALID_PASSWORD
     assert request.password_confirm.get_secret_value() == VALID_PASSWORD
 

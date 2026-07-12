@@ -11,6 +11,8 @@ class RegisterNewUserRequest(BaseModel):
 
     username: str = Field(min_length=8, max_length=15, pattern=r"^[a-zA-Z0-9_-]+$")
     email: EmailStr
+    first_name: str
+    last_name: str | None = None
     password: SecretStr
     password_confirm: SecretStr
 

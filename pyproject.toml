@@ -5,12 +5,14 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+  "aiosmtplib>=5.1.2",
   "alembic>=1.18.5",
   "asyncpg>=0.31.0",
   "fastapi[standard]>=0.138.0",
   "fastmcp>=3.4.2",
   "ipython>=9.14.1",
   "loguru>=0.7.3",
+  "pwdlib[argon2]>=0.3.0",
   "pydantic-settings>=2.14.2",
   "sqlalchemy>=2.0.51",
   "sqlmodel>=0.0.39",
