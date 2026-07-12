@@ -5,12 +5,13 @@ Responsiblity:
 - Define the database schema for verification of the local user for development user accounts.
 """
 
-from typing import Optional
-from uuid import UUID
-from sqlmodel import Field
-from sqlalchemy import DateTime, Column
-from app.db.models.mixins import BaseModel
 from datetime import datetime, timedelta, timezone
+from uuid import UUID
+
+from sqlalchemy import Column, DateTime
+from sqlmodel import Field
+
+from app.db.models.mixins import BaseModel
 
 
 def expires_in_15_minutes() -> datetime:
