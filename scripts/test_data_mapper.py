@@ -2,10 +2,14 @@ from uuid import uuid4
 
 from devtools import pprint
 
-from app.db.session import SessionLocal
+from app.db.engine import create_engine
+from app.db.session import create_session_factory
 from app.repositories.identity import LocalUserRepository
 from app.schemas.identity import CreateLocalUser
 from app.utils.mappers import LocalUserMapper
+
+engine = create_engine()
+SessionLocal = create_session_factory(engine)
 
 
 def test_local_user_mapper_from_create() -> None:

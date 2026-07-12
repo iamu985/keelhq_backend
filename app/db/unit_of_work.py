@@ -8,17 +8,13 @@ Responsibility:
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from app.core.unit_of_work import AbstractUnitOfWork
-from app.db.session import SessionLocal
 from app.repositories.identity.local_user_repository import LocalUserRepository
 
 
 class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
     """Concrete Unit of Work backed by an async SQLAlchemy session."""
 
-    def __init__(
-        self,
-        session_factory: async_sessionmaker[AsyncSession] = SessionLocal,
-    ) -> None:
+    def __init__(self, session_factory: async_sessionmaker[AsyncSession]) -> None:
         self.session_factory = session_factory
         self._session: AsyncSession | None = None
         self.users: LocalUserRepository
@@ -50,10 +46,3 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
         """Rollback the current transaction."""
         if self._session is not None:
             await self._session.rollback()
-
-    @property
-    def session(self) -> AsyncSession:
-        """Return the active session or raise if not entered."""
-        if self._session is None:
-            raise RuntimeError("Unit of work has not been entered")
-        return self._session

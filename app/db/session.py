@@ -1,11 +1,17 @@
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
+"""Session factory helpers.
 
-from app.db.engine import ENGINE
+Responsibility:
+- Build async SQLAlchemy session factories bound to a given engine.
+"""
 
-#  Create application session factory
-SessionLocal = async_sessionmaker(
-    bind=ENGINE,
-    class_=AsyncSession,
-    expire_on_commit=False,
-    autoflush=False,
-)
+from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
+
+
+def create_session_factory(engine: AsyncEngine) -> async_sessionmaker[AsyncSession]:
+    """Return an async sessionmaker bound to the provided engine."""
+    return async_sessionmaker(
+        bind=engine,
+        class_=AsyncSession,
+        expire_on_commit=False,
+        autoflush=False,
+    )

@@ -12,6 +12,3 @@ def create_engine() -> AsyncEngine:
             echo = True
 
     return create_async_engine(url=settings.database.connection_url, echo=echo, future=True)
-
-
-ENGINE = create_engine()
