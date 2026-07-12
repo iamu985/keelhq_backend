@@ -5,7 +5,7 @@ Responsibility:
 - Remain free of business logic and exception handling.
 """
 
-from typing import Optional, Sequence
+from collections.abc import Sequence
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -28,7 +28,7 @@ class SolutionRepository:
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
 
-    async def get(self, solution_id: UUID) -> Optional[Solution]:
+    async def get(self, solution_id: UUID) -> Solution | None:
         """Return the solution with the given primary key, or None if not found."""
         logger.info("Fetching Solution by id.")
         logger.debug(f"solution_id={solution_id}")
@@ -37,7 +37,7 @@ class SolutionRepository:
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
-    async def get_by_slug(self, slug: str) -> Optional[Solution]:
+    async def get_by_slug(self, slug: str) -> Solution | None:
         """Return the solution with the given unique slug, or None if not found."""
         logger.info("Fetching Solution by slug.")
         logger.debug(f"slug={slug}")
@@ -46,7 +46,7 @@ class SolutionRepository:
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
-    async def get_by_name(self, name: str) -> Optional[Solution]:
+    async def get_by_name(self, name: str) -> Solution | None:
         """Return the solution with the given name, or None if not found."""
         logger.info("Fetching Solution by name.")
         logger.debug(f"name={name}")
@@ -65,9 +65,7 @@ class SolutionRepository:
         await self.session.refresh(solution)
         return solution
 
-    async def list(
-        self, query: Optional[ListSolutionQuery] = None
-    ) -> Sequence[Solution]:
+    async def list(self, query: ListSolutionQuery | None = None) -> Sequence[Solution]:
         """Return all solutions, with optional filters from a ListSolutionQuery."""
         logger.info("Listing Solutions.")
         logger.debug(f"query={query}")

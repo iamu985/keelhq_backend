@@ -6,7 +6,6 @@ Responsibility:
 """
 
 from datetime import datetime
-from typing import Optional
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -22,9 +21,9 @@ class CreateAccessToken(BaseModel):
 
     site_id: UUID
     name: str
-    description: Optional[str] = None
+    description: str | None = None
     token_hash: str
-    expires_at: Optional[datetime] = None
+    expires_at: datetime | None = None
     is_active: bool = True
 
 
@@ -35,5 +34,5 @@ class ListAccessTokenQuery(BaseModel):
     - Carry optional filter parameters from the service layer to the repository.
     """
 
-    site_id: Optional[UUID] = None
-    is_active: Optional[bool] = None
+    site_id: UUID | None = None
+    is_active: bool | None = None

@@ -4,12 +4,13 @@ Responsibility:
 - Define the database schema for the sites table.
 """
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 from uuid import UUID
 
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlmodel import Field, Relationship
+
 from app.db.models.mixins import BaseModel
 
 if TYPE_CHECKING:
@@ -36,11 +37,11 @@ class Site(BaseModel, table=True):
     )
     name: str = Field(nullable=False)
     slug: str = Field(unique=True, nullable=False)
-    description: Optional[str] = Field(default=None, max_length=250)
-    logo_url: Optional[str] = Field(default=None)
+    description: str | None = Field(default=None, max_length=250)
+    logo_url: str | None = Field(default=None)
     status: str = Field(nullable=False)
     visibility: str = Field(nullable=False)
-    extension_id: Optional[UUID] = Field(
+    extension_id: UUID | None = Field(
         default=None,
         sa_column=Column(PGUUID(as_uuid=True), nullable=True),
     )

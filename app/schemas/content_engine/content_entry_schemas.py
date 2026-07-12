@@ -5,7 +5,7 @@ Responsibility:
 - Keep schemas decoupled from ORM models.
 """
 
-from typing import Any, Optional
+from typing import Any
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -22,8 +22,8 @@ class CreateContentEntry(BaseModel):
 
     site_id: UUID
     definition_id: UUID
-    title: Optional[str] = None
-    slug: Optional[str] = None
+    title: str | None = None
+    slug: str | None = None
     status: ContentStatus = ContentStatus.DRAFT
     sort_order: int = 0
     content: dict[str, Any] = {}
@@ -36,6 +36,6 @@ class ListContentEntryQuery(BaseModel):
     - Carry optional filter parameters from the service layer to the repository.
     """
 
-    site_id: Optional[UUID] = None
-    definition_id: Optional[UUID] = None
-    status: Optional[ContentStatus] = None
+    site_id: UUID | None = None
+    definition_id: UUID | None = None
+    status: ContentStatus | None = None

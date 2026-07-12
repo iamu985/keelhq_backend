@@ -6,17 +6,17 @@ Create Date: 2026-07-03 21:23:32.997162
 
 """
 
-from typing import Sequence, Union
+from collections.abc import Sequence
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision: str = "26462e3ed1cc"
-down_revision: Union[str, Sequence[str], None] = "4e6e6302b51b"
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+down_revision: str | Sequence[str] | None = "4e6e6302b51b"
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
@@ -37,9 +37,7 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("slug", name="uq_solutions_slug"),
     )
-    op.create_index(
-        "ix_solutions_is_builtin", "solutions", ["is_builtin"], unique=False
-    )
+    op.create_index("ix_solutions_is_builtin", "solutions", ["is_builtin"], unique=False)
     op.create_index("ix_solutions_name", "solutions", ["name"], unique=False)
     op.create_table(
         "editable_component_definitions",
@@ -58,9 +56,7 @@ def upgrade() -> None:
         ),
         sa.Column("display_order", sa.Integer(), nullable=False),
         sa.Column("icon", sa.String(), nullable=True),
-        sa.Column(
-            "editor_schema", postgresql.JSONB(astext_type=sa.Text()), nullable=False
-        ),
+        sa.Column("editor_schema", postgresql.JSONB(astext_type=sa.Text()), nullable=False),
         sa.ForeignKeyConstraint(
             ["site_id"],
             ["sites.id"],
@@ -70,9 +66,7 @@ def upgrade() -> None:
             ["solutions.id"],
         ),
         sa.PrimaryKeyConstraint("id"),
-        sa.UniqueConstraint(
-            "site_id", "key", name="uq_editable_component_definitions_site_id_key"
-        ),
+        sa.UniqueConstraint("site_id", "key", name="uq_editable_component_definitions_site_id_key"),
     )
     op.create_index(
         op.f("ix_editable_component_definitions_display_order"),
@@ -176,12 +170,8 @@ def upgrade() -> None:
         ["sort_order"],
         unique=False,
     )
-    op.create_index(
-        op.f("ix_content_entries_status"), "content_entries", ["status"], unique=False
-    )
-    op.create_index(
-        "ix_content_entries_title", "content_entries", ["title"], unique=False
-    )
+    op.create_index(op.f("ix_content_entries_status"), "content_entries", ["status"], unique=False)
+    op.create_index("ix_content_entries_title", "content_entries", ["title"], unique=False)
     op.create_index(op.f("ix_sites_owner_id"), "sites", ["owner_id"], unique=False)
     # ### end Alembic commands ###
 
@@ -195,15 +185,9 @@ def downgrade() -> None:
     op.drop_index(op.f("ix_content_entries_sort_order"), table_name="content_entries")
     op.drop_index("ix_content_entries_site_id_status", table_name="content_entries")
     op.drop_index(op.f("ix_content_entries_site_id"), table_name="content_entries")
-    op.drop_index(
-        "ix_content_entries_definition_id_status", table_name="content_entries"
-    )
-    op.drop_index(
-        "ix_content_entries_definition_id_sort_order", table_name="content_entries"
-    )
-    op.drop_index(
-        op.f("ix_content_entries_definition_id"), table_name="content_entries"
-    )
+    op.drop_index("ix_content_entries_definition_id_status", table_name="content_entries")
+    op.drop_index("ix_content_entries_definition_id_sort_order", table_name="content_entries")
+    op.drop_index(op.f("ix_content_entries_definition_id"), table_name="content_entries")
     op.drop_table("content_entries")
     op.drop_index(
         op.f("ix_editable_component_definitions_solution_id"),

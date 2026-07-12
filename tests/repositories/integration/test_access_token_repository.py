@@ -5,7 +5,8 @@ Responsibility:
   AsyncSession so the suite stays fast and isolated from the database.
 """
 
-from typing import Sequence
+from collections.abc import Sequence
+from typing import cast
 from unittest.mock import AsyncMock, MagicMock
 from uuid import UUID, uuid4
 
@@ -15,13 +16,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.models import AccessToken
 from app.repositories.integration.access_token_repository import AccessTokenRepository
 
-
 SITE_ID = UUID("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
 TOKEN_HASH = "sha256-abc123"
 
 
 @pytest.fixture
-def mock_session() -> AsyncSession:
+def mock_session() -> AsyncMock:
     """Return a mocked AsyncSession with all async methods pre-wired."""
     session = AsyncMock(spec=AsyncSession)
     session.execute = AsyncMock()
@@ -56,15 +56,15 @@ def sample_token() -> AccessToken:
 
 
 @pytest.fixture
-def repository(mock_session: AsyncSession) -> AccessTokenRepository:
+def repository(mock_session: AsyncMock) -> AccessTokenRepository:
     """Return an AccessTokenRepository backed by the mocked session."""
-    return AccessTokenRepository(session=mock_session)
+    return AccessTokenRepository(session=cast(AsyncSession, mock_session))
 
 
 # TODO: add unit tests for logging assertions once they matter.
 async def test_get_token_by_id_found(
     repository: AccessTokenRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_token: AccessToken,
 ) -> None:
@@ -80,7 +80,7 @@ async def test_get_token_by_id_found(
 
 async def test_get_token_by_id_not_found(
     repository: AccessTokenRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """get(token_id) should return None when no token matches."""
@@ -95,7 +95,7 @@ async def test_get_token_by_id_not_found(
 
 async def test_get_by_token_hash_found(
     repository: AccessTokenRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_token: AccessToken,
 ) -> None:
@@ -111,7 +111,7 @@ async def test_get_by_token_hash_found(
 
 async def test_get_by_token_hash_not_found(
     repository: AccessTokenRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """get_by_token_hash should return None when the hash is unknown."""
@@ -126,7 +126,7 @@ async def test_get_by_token_hash_not_found(
 
 async def test_list_by_site_no_filter(
     repository: AccessTokenRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_token: AccessToken,
 ) -> None:
@@ -142,7 +142,7 @@ async def test_list_by_site_no_filter(
 
 async def test_list_by_site_active_only(
     repository: AccessTokenRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_token: AccessToken,
 ) -> None:
@@ -158,7 +158,7 @@ async def test_list_by_site_active_only(
 
 async def test_list_by_site_inactive_only(
     repository: AccessTokenRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """list_by_site with is_active=False should return inactive tokens only."""
@@ -173,7 +173,7 @@ async def test_list_by_site_inactive_only(
 
 async def test_list_by_site_empty(
     repository: AccessTokenRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """list_by_site should return empty sequence when no tokens exist for the site."""
@@ -188,7 +188,7 @@ async def test_list_by_site_empty(
 
 async def test_create_token(
     repository: AccessTokenRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     sample_token: AccessToken,
 ) -> None:
     """create(token) should add, flush, refresh, and return the token."""
@@ -202,7 +202,7 @@ async def test_create_token(
 
 async def test_delete_token(
     repository: AccessTokenRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     sample_token: AccessToken,
 ) -> None:
     """delete(token) should delete the token, flush, and return it."""

@@ -8,7 +8,7 @@ router = APIRouter()
 
 
 @router.get("/health")
-async def health_check():
+async def health_check() -> JSONResponse:
     response = settings.model_dump()
     password: SecretStr = response["database"]["password"]
     response["database"]["password"] = password.get_secret_value()

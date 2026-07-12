@@ -9,7 +9,7 @@ Waitlist). The actual field definitions live in `schema` and the submitted value
 form structure without touching the data collected by visitors.
 """
 
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import Column, Index, UniqueConstraint
 from sqlalchemy.dialects.postgresql import JSONB
@@ -42,7 +42,7 @@ class Form(BaseModel, IsPartOfSite, table=True):
         index=True,
         description="URL-safe identifier for the form within a site.",
     )
-    description: Optional[str] = Field(
+    description: str | None = Field(
         default=None,
         description="Optional explanation of the form's purpose.",
     )

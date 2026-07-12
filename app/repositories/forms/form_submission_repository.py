@@ -5,7 +5,7 @@ Responsibility:
 - Remain free of business logic and exception handling.
 """
 
-from typing import Optional, Sequence
+from collections.abc import Sequence
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -28,7 +28,7 @@ class FormSubmissionRepository:
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
 
-    async def get(self, submission_id: UUID) -> Optional[FormSubmission]:
+    async def get(self, submission_id: UUID) -> FormSubmission | None:
         """Return the submission with the given primary key, or None if not found."""
         logger.info("Fetching FormSubmission by id.")
         logger.debug(f"submission_id={submission_id}")
@@ -40,7 +40,7 @@ class FormSubmissionRepository:
     async def list_by_form(
         self,
         form_id: UUID,
-        status: Optional[FormSubmissionStatus] = None,
+        status: FormSubmissionStatus | None = None,
     ) -> Sequence[FormSubmission]:
         """Return all submissions for a form, with optional status filter."""
         logger.info("Listing FormSubmissions by form_id.")

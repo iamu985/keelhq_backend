@@ -5,7 +5,8 @@ Responsibility:
   AsyncSession so the suite stays fast and isolated from the database.
 """
 
-from typing import Sequence
+from collections.abc import Sequence
+from typing import cast
 from unittest.mock import AsyncMock, MagicMock
 from uuid import UUID, uuid4
 
@@ -17,7 +18,7 @@ from app.repositories.identity.local_user_repository import LocalUserRepository
 
 
 @pytest.fixture
-def mock_session() -> AsyncSession:
+def mock_session() -> AsyncMock:
     """Return a mocked AsyncSession with async methods pre-wired.
 
     The repository awaits session.execute/flush/refresh/delete, so those
@@ -66,16 +67,16 @@ def sample_user() -> LocalUser:
 
 
 @pytest.fixture
-def repository(mock_session: AsyncSession) -> LocalUserRepository:
+def repository(mock_session: AsyncMock) -> LocalUserRepository:
     """Return a LocalUserRepository backed by the mocked session."""
-    return LocalUserRepository(session=mock_session)
+    return LocalUserRepository(session=cast(AsyncSession, mock_session))
 
 
 # TODO: add unit tests for the logger side effects in get() once they matter.
 @pytest.mark.asyncio
 async def test_get_user_by_id_found(
     repository: LocalUserRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_user: LocalUser,
 ) -> None:
@@ -92,7 +93,7 @@ async def test_get_user_by_id_found(
 @pytest.mark.asyncio
 async def test_get_user_by_id_not_found(
     repository: LocalUserRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """get(user_id) should return None when no user matches."""
@@ -108,7 +109,7 @@ async def test_get_user_by_id_not_found(
 @pytest.mark.asyncio
 async def test_get_by_email_found(
     repository: LocalUserRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_user: LocalUser,
 ) -> None:
@@ -125,7 +126,7 @@ async def test_get_by_email_found(
 @pytest.mark.asyncio
 async def test_get_by_email_not_found(
     repository: LocalUserRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """get_by_email(email) should return None when the email is unknown."""
@@ -141,7 +142,7 @@ async def test_get_by_email_not_found(
 @pytest.mark.asyncio
 async def test_get_by_username_found(
     repository: LocalUserRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_user: LocalUser,
 ) -> None:
@@ -158,7 +159,7 @@ async def test_get_by_username_found(
 @pytest.mark.asyncio
 async def test_get_by_username_not_found(
     repository: LocalUserRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """get_by_username(username) should return None when the username is unknown."""
@@ -174,7 +175,7 @@ async def test_get_by_username_not_found(
 @pytest.mark.asyncio
 async def test_create_user(
     repository: LocalUserRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     sample_user: LocalUser,
 ) -> None:
     """create(user) should add, flush, refresh, and return the user."""
@@ -189,7 +190,7 @@ async def test_create_user(
 @pytest.mark.asyncio
 async def test_list_users(
     repository: LocalUserRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_user: LocalUser,
 ) -> None:
@@ -206,7 +207,7 @@ async def test_list_users(
 @pytest.mark.asyncio
 async def test_list_users_empty(
     repository: LocalUserRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """list() should return an empty sequence when no users exist."""
@@ -222,7 +223,7 @@ async def test_list_users_empty(
 @pytest.mark.asyncio
 async def test_delete_user(
     repository: LocalUserRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     sample_user: LocalUser,
 ) -> None:
     """delete(user) should delete the user and flush the session."""

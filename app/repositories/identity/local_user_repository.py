@@ -5,7 +5,7 @@ Responsibility:
 - Remain free of business logic and exception handling; those belong to the service layer.
 """
 
-from typing import Optional, Sequence
+from collections.abc import Sequence
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -27,7 +27,7 @@ class LocalUserRepository:
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
 
-    async def get(self, user_id: UUID) -> Optional[LocalUser]:
+    async def get(self, user_id: UUID) -> LocalUser | None:
         """Return the user with the given primary key, or None if not found."""
         logger.info("Fetching LocalUser by id.")
         logger.debug(f"user_id={user_id}")
@@ -36,7 +36,7 @@ class LocalUserRepository:
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
-    async def get_by_email(self, email: str) -> Optional[LocalUser]:
+    async def get_by_email(self, email: str) -> LocalUser | None:
         """Return the user with the given email address, or None if not found."""
         logger.info("Fetching LocalUser by email.")
         logger.debug(f"email={email}")
@@ -45,7 +45,7 @@ class LocalUserRepository:
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
-    async def get_by_username(self, username: str) -> Optional[LocalUser]:
+    async def get_by_username(self, username: str) -> LocalUser | None:
         """Return the user with the given username, or None if not found."""
         logger.info("Fetching LocalUser by username.")
         logger.debug(f"username={username}")

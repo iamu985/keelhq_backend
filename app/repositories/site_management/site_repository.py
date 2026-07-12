@@ -5,7 +5,7 @@ Responsibility:
 - Remain free of business logic and exception handling.
 """
 
-from typing import Optional, Sequence
+from collections.abc import Sequence
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -28,7 +28,7 @@ class SiteRepository:
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
 
-    async def get(self, site_id: UUID) -> Optional[Site]:
+    async def get(self, site_id: UUID) -> Site | None:
         """Return the site with the given primary key, or None if not found."""
         logger.info("Fetching Site by id.")
         logger.debug(f"site_id={site_id}")
@@ -37,7 +37,7 @@ class SiteRepository:
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
-    async def get_by_slug(self, slug: str) -> Optional[Site]:
+    async def get_by_slug(self, slug: str) -> Site | None:
         """Return the site with the given unique slug, or None if not found."""
         logger.info("Fetching Site by slug.")
         logger.debug(f"slug={slug}")
@@ -65,7 +65,7 @@ class SiteRepository:
         await self.session.refresh(site)
         return site
 
-    async def list(self, query: Optional[ListSiteQuery] = None) -> Sequence[Site]:
+    async def list(self, query: ListSiteQuery | None = None) -> Sequence[Site]:
         """Return all sites, with optional filters from a ListSiteQuery."""
         logger.info("Listing Sites.")
         logger.debug(f"query={query}")

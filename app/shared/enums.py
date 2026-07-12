@@ -8,7 +8,7 @@ schema. They are intentionally simple `str` enums so they serialize cleanly to
 PostgreSQL and to JSON without surprising callers.
 """
 
-from enum import Enum, StrEnum
+from enum import StrEnum
 
 
 class SiteVisibility(StrEnum):
@@ -52,7 +52,7 @@ class SiteStatus(StrEnum):
     """Site is deleted by the owner or admin - soft delete"""
 
 
-class EditableComponentKind(str, Enum):
+class EditableComponentKind(StrEnum):
     """Classification of an editable component's cardinality.
 
     Responsibility:
@@ -73,7 +73,7 @@ class EditableComponentKind(str, Enum):
     """
 
 
-class ContentStatus(str, Enum):
+class ContentStatus(StrEnum):
     """Publication state of a content entry.
 
     Responsibility:
@@ -90,7 +90,7 @@ class ContentStatus(str, Enum):
     """Entry is no longer published but is retained for history."""
 
 
-class FormSubmissionStatus(str, Enum):
+class FormSubmissionStatus(StrEnum):
     """Processing state of a form submission.
 
     Responsibility:

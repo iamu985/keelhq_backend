@@ -5,7 +5,8 @@ Responsibility:
   using a mocked AsyncSession so the suite stays fast and isolated from the database.
 """
 
-from typing import Sequence
+from collections.abc import Sequence
+from typing import cast
 from unittest.mock import AsyncMock, MagicMock
 from uuid import UUID, uuid4
 
@@ -18,13 +19,12 @@ from app.repositories.content_engine.editable_component_definition_repository im
 )
 from app.shared.enums import EditableComponentKind
 
-
 SITE_ID = UUID("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
 SOLUTION_ID = UUID("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb")
 
 
 @pytest.fixture
-def mock_session() -> AsyncSession:
+def mock_session() -> AsyncMock:
     """Return a mocked AsyncSession with all async methods pre-wired."""
     session = AsyncMock(spec=AsyncSession)
     session.execute = AsyncMock()
@@ -62,15 +62,15 @@ def sample_definition() -> EditableComponentDefinition:
 
 
 @pytest.fixture
-def repository(mock_session: AsyncSession) -> EditableComponentDefinitionRepository:
+def repository(mock_session: AsyncMock) -> EditableComponentDefinitionRepository:
     """Return an EditableComponentDefinitionRepository backed by the mocked session."""
-    return EditableComponentDefinitionRepository(session=mock_session)
+    return EditableComponentDefinitionRepository(session=cast(AsyncSession, mock_session))
 
 
 # TODO: add unit tests for logging assertions once they matter.
 async def test_get_definition_by_id_found(
     repository: EditableComponentDefinitionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_definition: EditableComponentDefinition,
 ) -> None:
@@ -86,7 +86,7 @@ async def test_get_definition_by_id_found(
 
 async def test_get_definition_by_id_not_found(
     repository: EditableComponentDefinitionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """get(definition_id) should return None when no definition matches."""
@@ -101,7 +101,7 @@ async def test_get_definition_by_id_not_found(
 
 async def test_get_by_site_and_key_found(
     repository: EditableComponentDefinitionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_definition: EditableComponentDefinition,
 ) -> None:
@@ -117,7 +117,7 @@ async def test_get_by_site_and_key_found(
 
 async def test_get_by_site_and_key_not_found(
     repository: EditableComponentDefinitionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """get_by_site_and_key should return None when the key is unknown for that site."""
@@ -132,7 +132,7 @@ async def test_get_by_site_and_key_not_found(
 
 async def test_list_by_site_no_filter(
     repository: EditableComponentDefinitionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_definition: EditableComponentDefinition,
 ) -> None:
@@ -140,9 +140,7 @@ async def test_list_by_site_no_filter(
     mock_result.scalars.return_value.all.return_value = [sample_definition]
     mock_session.execute.return_value = mock_result
 
-    definitions: Sequence[EditableComponentDefinition] = await repository.list_by_site(
-        SITE_ID
-    )
+    definitions: Sequence[EditableComponentDefinition] = await repository.list_by_site(SITE_ID)
 
     assert definitions == [sample_definition]
     mock_session.execute.assert_awaited_once()
@@ -150,7 +148,7 @@ async def test_list_by_site_no_filter(
 
 async def test_list_by_site_with_kind_filter(
     repository: EditableComponentDefinitionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_definition: EditableComponentDefinition,
 ) -> None:
@@ -158,9 +156,7 @@ async def test_list_by_site_with_kind_filter(
     mock_result.scalars.return_value.all.return_value = [sample_definition]
     mock_session.execute.return_value = mock_result
 
-    definitions = await repository.list_by_site(
-        SITE_ID, kind=EditableComponentKind.SINGLETON
-    )
+    definitions = await repository.list_by_site(SITE_ID, kind=EditableComponentKind.SINGLETON)
 
     assert definitions == [sample_definition]
     mock_session.execute.assert_awaited_once()
@@ -168,7 +164,7 @@ async def test_list_by_site_with_kind_filter(
 
 async def test_list_by_site_empty(
     repository: EditableComponentDefinitionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """list_by_site should return empty sequence when no definitions exist."""
@@ -183,7 +179,7 @@ async def test_list_by_site_empty(
 
 async def test_create_definition(
     repository: EditableComponentDefinitionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     sample_definition: EditableComponentDefinition,
 ) -> None:
     """create(definition) should add, flush, refresh, and return the definition."""
@@ -197,7 +193,7 @@ async def test_create_definition(
 
 async def test_delete_definition(
     repository: EditableComponentDefinitionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     sample_definition: EditableComponentDefinition,
 ) -> None:
     """delete(definition) should delete the definition, flush, and return it."""

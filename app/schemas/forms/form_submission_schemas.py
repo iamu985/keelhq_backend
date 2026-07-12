@@ -5,7 +5,7 @@ Responsibility:
 - Keep schemas decoupled from ORM models.
 """
 
-from typing import Any, Optional
+from typing import Any
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -22,8 +22,8 @@ class CreateFormSubmission(BaseModel):
 
     form_id: UUID
     payload: dict[str, Any] = {}
-    ip_address: Optional[str] = None
-    user_agent: Optional[str] = None
+    ip_address: str | None = None
+    user_agent: str | None = None
 
 
 class ListFormSubmissionQuery(BaseModel):
@@ -33,5 +33,5 @@ class ListFormSubmissionQuery(BaseModel):
     - Carry optional filter parameters from the service layer to the repository.
     """
 
-    form_id: Optional[UUID] = None
-    status: Optional[FormSubmissionStatus] = None
+    form_id: UUID | None = None
+    status: FormSubmissionStatus | None = None

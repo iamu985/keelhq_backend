@@ -1,7 +1,8 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import BaseModel, Field, SecretStr, field_validator
 from enum import StrEnum
 from pathlib import Path
+
+from pydantic import BaseModel, Field, SecretStr, field_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 VERSION = "0.1.0"
 
@@ -43,7 +44,7 @@ class DatabaseConfiguration(BaseModel):
     port: int = 5432
 
     @property
-    def connection_url(self):
+    def connection_url(self) -> str:
         return f"postgresql+asyncpg://{self.username}:{self.password.get_secret_value()}@{self.host}:{self.port}/{self.database}"
 
 

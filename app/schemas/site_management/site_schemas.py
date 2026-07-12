@@ -5,10 +5,10 @@ Responsibility:
 - Keep schemas decoupled from ORM models.
 """
 
-from typing import Optional
 from uuid import UUID
 
 from pydantic import BaseModel
+
 from app.shared.enums import SiteStatus, SiteVisibility
 
 
@@ -22,18 +22,18 @@ class CreateSite(BaseModel):
     owner_id: UUID
     name: str
     slug: str
-    description: Optional[str] = None
-    logo_url: Optional[str] = None
+    description: str | None = None
+    logo_url: str | None = None
     status: SiteStatus
     visibility: SiteVisibility
-    extension_id: Optional[UUID] = None
+    extension_id: UUID | None = None
 
 
 class SiteResponse(BaseModel):
     name: str
     slug: str
-    description: Optional[str] = None
-    logo_url: Optional[str] = None
+    description: str | None = None
+    logo_url: str | None = None
     status: SiteStatus
     visibility: SiteVisibility
 
@@ -45,6 +45,6 @@ class ListSiteQuery(BaseModel):
     - Carry optional filter parameters from the service layer to the repository.
     """
 
-    owner_id: Optional[UUID] = None
-    status: Optional[SiteStatus] = None
-    visibility: Optional[SiteVisibility] = None
+    owner_id: UUID | None = None
+    status: SiteStatus | None = None
+    visibility: SiteVisibility | None = None

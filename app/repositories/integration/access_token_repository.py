@@ -5,7 +5,7 @@ Responsibility:
 - Remain free of business logic and exception handling.
 """
 
-from typing import Optional, Sequence
+from collections.abc import Sequence
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -27,7 +27,7 @@ class AccessTokenRepository:
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
 
-    async def get(self, token_id: UUID) -> Optional[AccessToken]:
+    async def get(self, token_id: UUID) -> AccessToken | None:
         """Return the access token with the given primary key, or None if not found."""
         logger.info("Fetching AccessToken by id.")
         logger.debug(f"token_id={token_id}")
@@ -36,7 +36,7 @@ class AccessTokenRepository:
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
-    async def get_by_token_hash(self, token_hash: str) -> Optional[AccessToken]:
+    async def get_by_token_hash(self, token_hash: str) -> AccessToken | None:
         """Return the access token whose hash matches, or None if not found.
 
         This is the primary lookup used during request authentication. The raw
@@ -51,7 +51,7 @@ class AccessTokenRepository:
     async def list_by_site(
         self,
         site_id: UUID,
-        is_active: Optional[bool] = None,
+        is_active: bool | None = None,
     ) -> Sequence[AccessToken]:
         """Return all tokens for a site, with optional is_active filter."""
         logger.info("Listing AccessTokens by site_id.")

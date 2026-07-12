@@ -4,8 +4,6 @@ Responsibility:
 - Define the database schema for local development user accounts.
 """
 
-from typing import Optional
-
 from sqlmodel import Field
 
 from app.db.models.mixins import BaseModel
@@ -25,7 +23,7 @@ class LocalUser(BaseModel, table=True):
     username: str = Field(unique=True, index=True, nullable=False)
     password_hash: str = Field(nullable=False)
     first_name: str = Field(nullable=False)
-    middle_name: Optional[str] = Field(default=None)
-    last_name: Optional[str] = Field(default=None)
+    middle_name: str | None = Field(default=None)
+    last_name: str | None = Field(default=None)
     is_active: bool = Field(default=True)
     is_superuser: bool = Field(default=False)

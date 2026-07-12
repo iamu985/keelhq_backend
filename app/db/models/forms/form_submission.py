@@ -8,17 +8,16 @@ of the payload is dictated by the parent `Form.field_schema`. Keeping the schema
 data separate lets the dashboard evolve forms without migrating historical submissions.
 """
 
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Any, Optional
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING, Any
 from uuid import UUID
 
 from sqlalchemy import Column, Enum, Index
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlmodel import Field, Relationship
 
-from app.shared.enums import FormSubmissionStatus
-
 from app.db.models.mixins import BaseModel
+from app.shared.enums import FormSubmissionStatus
 
 if TYPE_CHECKING:
     from app.db.models.forms.form import Form
@@ -56,15 +55,15 @@ class FormSubmission(BaseModel, table=True):
         description="Review state of the submission.",
     )
     submitted_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
+        default_factory=lambda: datetime.now(UTC),
         nullable=False,
         description="Moment the visitor submitted the form.",
     )
-    ip_address: Optional[str] = Field(
+    ip_address: str | None = Field(
         default=None,
         description="Optional IP address of the submitting visitor.",
     )
-    user_agent: Optional[str] = Field(
+    user_agent: str | None = Field(
         default=None,
         description="Optional user agent string of the submitting visitor.",
     )

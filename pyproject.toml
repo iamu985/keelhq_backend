@@ -23,6 +23,7 @@ dev = [
   "devtools>=0.12.2",
   "ipython>=9.14.1",
   "mypy>=2.1.0",
+  "pre-commit>=4.6.0",
   "pytest>=9.1.1",
   "pytest-asyncio>=0.24.0",
   "pytest-cov>=7.1.0",
@@ -32,6 +33,7 @@ dev = [
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
+pythonpath = ["."]
 addopts = "--cov=app --cov-report=term-missing --cov-report=html"
 testpaths = ["tests"]
 
@@ -46,3 +48,20 @@ exclude_lines = [
   "raise AssertionError",
   "if __name__ == .__main__.:",
 ]
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "C4"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_return_any = true
+disallow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = ["app.db.migrations.*"]
+ignore_errors = true

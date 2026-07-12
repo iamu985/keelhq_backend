@@ -1,7 +1,8 @@
 import sys
-from loguru import logger
-from app.core.config import settings, LogLevel
 
+from loguru import logger
+
+from app.core.config import LogLevel, settings
 
 logger.remove()
 

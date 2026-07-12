@@ -5,7 +5,7 @@ Responsibility:
 - Remain free of business logic and exception handling.
 """
 
-from typing import Optional, Sequence
+from collections.abc import Sequence
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -27,7 +27,7 @@ class FormRepository:
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
 
-    async def get(self, form_id: UUID) -> Optional[Form]:
+    async def get(self, form_id: UUID) -> Form | None:
         """Return the form with the given primary key, or None if not found."""
         logger.info("Fetching Form by id.")
         logger.debug(f"form_id={form_id}")
@@ -36,7 +36,7 @@ class FormRepository:
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
-    async def get_by_site_and_slug(self, site_id: UUID, slug: str) -> Optional[Form]:
+    async def get_by_site_and_slug(self, site_id: UUID, slug: str) -> Form | None:
         """Return the form within a site that matches the given slug, or None.
 
         Slug uniqueness is scoped per site, so both site_id and slug are required.
@@ -54,7 +54,7 @@ class FormRepository:
     async def list_by_site(
         self,
         site_id: UUID,
-        is_active: Optional[bool] = None,
+        is_active: bool | None = None,
     ) -> Sequence[Form]:
         """Return all forms for a site, with optional is_active filter."""
         logger.info("Listing Forms by site_id.")

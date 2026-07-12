@@ -5,7 +5,7 @@ Responsibility:
 - Remain free of business logic and exception handling.
 """
 
-from typing import Optional, Sequence
+from collections.abc import Sequence
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -28,7 +28,7 @@ class EditableComponentDefinitionRepository:
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
 
-    async def get(self, definition_id: UUID) -> Optional[EditableComponentDefinition]:
+    async def get(self, definition_id: UUID) -> EditableComponentDefinition | None:
         """Return the definition with the given primary key, or None if not found."""
         logger.info("Fetching EditableComponentDefinition by id.")
         logger.debug(f"definition_id={definition_id}")
@@ -41,7 +41,7 @@ class EditableComponentDefinitionRepository:
 
     async def get_by_site_and_key(
         self, site_id: UUID, key: str
-    ) -> Optional[EditableComponentDefinition]:
+    ) -> EditableComponentDefinition | None:
         """Return the definition within a site that matches the given key, or None.
 
         Key uniqueness is scoped per site, so both site_id and key are required.
@@ -59,7 +59,7 @@ class EditableComponentDefinitionRepository:
     async def list_by_site(
         self,
         site_id: UUID,
-        kind: Optional[EditableComponentKind] = None,
+        kind: EditableComponentKind | None = None,
     ) -> Sequence[EditableComponentDefinition]:
         """Return all definitions for a site, with optional kind filter."""
         logger.info("Listing EditableComponentDefinitions by site_id.")
@@ -74,9 +74,7 @@ class EditableComponentDefinitionRepository:
         result = await self.session.execute(stmt)
         return result.scalars().all()
 
-    async def create(
-        self, definition: EditableComponentDefinition
-    ) -> EditableComponentDefinition:
+    async def create(self, definition: EditableComponentDefinition) -> EditableComponentDefinition:
         """Persist a new EditableComponentDefinition and return the refreshed instance."""
         logger.info("Creating EditableComponentDefinition.")
         logger.debug(f"site_id={definition.site_id} key={definition.key}")
@@ -86,9 +84,7 @@ class EditableComponentDefinitionRepository:
         await self.session.refresh(definition)
         return definition
 
-    async def delete(
-        self, definition: EditableComponentDefinition
-    ) -> EditableComponentDefinition:
+    async def delete(self, definition: EditableComponentDefinition) -> EditableComponentDefinition:
         """Delete the given EditableComponentDefinition and return the deleted instance."""
         logger.info("Deleting EditableComponentDefinition.")
         logger.debug(f"definition_id={definition.id}")

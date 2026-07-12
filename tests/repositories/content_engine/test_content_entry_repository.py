@@ -5,7 +5,8 @@ Responsibility:
   AsyncSession so the suite stays fast and isolated from the database.
 """
 
-from typing import Sequence
+from collections.abc import Sequence
+from typing import cast
 from unittest.mock import AsyncMock, MagicMock
 from uuid import UUID, uuid4
 
@@ -18,13 +19,12 @@ from app.repositories.content_engine.content_entry_repository import (
 )
 from app.shared.enums import ContentStatus
 
-
 SITE_ID = UUID("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
 DEFINITION_ID = UUID("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb")
 
 
 @pytest.fixture
-def mock_session() -> AsyncSession:
+def mock_session() -> AsyncMock:
     """Return a mocked AsyncSession with all async methods pre-wired."""
     session = AsyncMock(spec=AsyncSession)
     session.execute = AsyncMock()
@@ -61,15 +61,15 @@ def sample_entry() -> ContentEntry:
 
 
 @pytest.fixture
-def repository(mock_session: AsyncSession) -> ContentEntryRepository:
+def repository(mock_session: AsyncMock) -> ContentEntryRepository:
     """Return a ContentEntryRepository backed by the mocked session."""
-    return ContentEntryRepository(session=mock_session)
+    return ContentEntryRepository(session=cast(AsyncSession, mock_session))
 
 
 # TODO: add unit tests for logging assertions once they matter.
 async def test_get_entry_by_id_found(
     repository: ContentEntryRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_entry: ContentEntry,
 ) -> None:
@@ -85,7 +85,7 @@ async def test_get_entry_by_id_found(
 
 async def test_get_entry_by_id_not_found(
     repository: ContentEntryRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """get(entry_id) should return None when no entry matches."""
@@ -100,7 +100,7 @@ async def test_get_entry_by_id_not_found(
 
 async def test_get_by_site_and_slug_found(
     repository: ContentEntryRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_entry: ContentEntry,
 ) -> None:
@@ -116,7 +116,7 @@ async def test_get_by_site_and_slug_found(
 
 async def test_get_by_site_and_slug_not_found(
     repository: ContentEntryRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """get_by_site_and_slug should return None when the slug is unknown for that site."""
@@ -131,7 +131,7 @@ async def test_get_by_site_and_slug_not_found(
 
 async def test_list_by_site_no_filters(
     repository: ContentEntryRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_entry: ContentEntry,
 ) -> None:
@@ -147,7 +147,7 @@ async def test_list_by_site_no_filters(
 
 async def test_list_by_site_with_status_filter(
     repository: ContentEntryRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_entry: ContentEntry,
 ) -> None:
@@ -163,7 +163,7 @@ async def test_list_by_site_with_status_filter(
 
 async def test_list_by_site_with_definition_filter(
     repository: ContentEntryRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_entry: ContentEntry,
 ) -> None:
@@ -179,7 +179,7 @@ async def test_list_by_site_with_definition_filter(
 
 async def test_list_by_site_empty(
     repository: ContentEntryRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """list_by_site should return empty sequence when no entries exist."""
@@ -194,7 +194,7 @@ async def test_list_by_site_empty(
 
 async def test_list_by_definition_no_filter(
     repository: ContentEntryRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_entry: ContentEntry,
 ) -> None:
@@ -210,7 +210,7 @@ async def test_list_by_definition_no_filter(
 
 async def test_list_by_definition_with_status(
     repository: ContentEntryRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_entry: ContentEntry,
 ) -> None:
@@ -218,9 +218,7 @@ async def test_list_by_definition_with_status(
     mock_result.scalars.return_value.all.return_value = [sample_entry]
     mock_session.execute.return_value = mock_result
 
-    entries = await repository.list_by_definition(
-        DEFINITION_ID, status=ContentStatus.PUBLISHED
-    )
+    entries = await repository.list_by_definition(DEFINITION_ID, status=ContentStatus.PUBLISHED)
 
     assert entries == [sample_entry]
     mock_session.execute.assert_awaited_once()
@@ -228,7 +226,7 @@ async def test_list_by_definition_with_status(
 
 async def test_create_entry(
     repository: ContentEntryRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     sample_entry: ContentEntry,
 ) -> None:
     """create(entry) should add, flush, refresh, and return the entry."""
@@ -242,7 +240,7 @@ async def test_create_entry(
 
 async def test_delete_entry(
     repository: ContentEntryRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     sample_entry: ContentEntry,
 ) -> None:
     """delete(entry) should delete the entry, flush, and return it."""

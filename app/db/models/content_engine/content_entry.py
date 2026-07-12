@@ -9,16 +9,15 @@ keeps the domain models technology-agnostic: no framework-specific rendering,
 CMS schema design, or AI logic lives in this model.
 """
 
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 from uuid import UUID
 
 from sqlalchemy import Column, Enum, Index, UniqueConstraint
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlmodel import Field, Relationship
 
-from app.shared.enums import ContentStatus
-
 from app.db.models.mixins import BaseModel, IsPartOfSite
+from app.shared.enums import ContentStatus
 
 if TYPE_CHECKING:
     from app.db.models.content_engine.editable_component_definition import (
@@ -50,12 +49,12 @@ class ContentEntry(BaseModel, IsPartOfSite, table=True):
         nullable=False,
         description="The editable component definition that describes the structure of this entry.",
     )
-    title: Optional[str] = Field(
+    title: str | None = Field(
         default=None,
         index=True,
         description="Human-readable title shown in the dashboard list (e.g., 'SEO Optimization').",
     )
-    slug: Optional[str] = Field(
+    slug: str | None = Field(
         default=None,
         description="Optional URL-safe identifier for future routing (e.g., 'seo-optimization').",
     )
@@ -98,8 +97,6 @@ class ContentEntry(BaseModel, IsPartOfSite, table=True):
         UniqueConstraint("site_id", "slug", name="uq_content_entries_site_id_slug"),
         Index("ix_content_entries_site_id_status", "site_id", "status"),
         Index("ix_content_entries_definition_id_status", "definition_id", "status"),
-        Index(
-            "ix_content_entries_definition_id_sort_order", "definition_id", "sort_order"
-        ),
+        Index("ix_content_entries_definition_id_sort_order", "definition_id", "sort_order"),
         Index("ix_content_entries_title", "title"),
     )

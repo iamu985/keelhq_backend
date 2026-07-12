@@ -6,17 +6,17 @@ Create Date: 2026-07-05 20:00:38.931674
 
 """
 
-from typing import Sequence, Union
+from collections.abc import Sequence
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision: str = "594f982e6f5d"
-down_revision: Union[str, Sequence[str], None] = "26462e3ed1cc"
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+down_revision: str | Sequence[str] | None = "26462e3ed1cc"
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
@@ -41,9 +41,7 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("token_hash", name="uq_access_tokens_token_hash"),
     )
-    op.create_index(
-        op.f("ix_access_tokens_site_id"), "access_tokens", ["site_id"], unique=False
-    )
+    op.create_index(op.f("ix_access_tokens_site_id"), "access_tokens", ["site_id"], unique=False)
     op.create_index(
         op.f("ix_access_tokens_token_hash"),
         "access_tokens",
@@ -93,9 +91,7 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("storage_key", name="uq_media_assets_storage_key"),
     )
-    op.create_index(
-        op.f("ix_media_assets_site_id"), "media_assets", ["site_id"], unique=False
-    )
+    op.create_index(op.f("ix_media_assets_site_id"), "media_assets", ["site_id"], unique=False)
     op.create_index(
         op.f("ix_media_assets_storage_key"),
         "media_assets",
@@ -129,9 +125,7 @@ def upgrade() -> None:
         ["form_id"],
         unique=False,
     )
-    op.create_index(
-        "ix_form_submissions_status", "form_submissions", ["status"], unique=False
-    )
+    op.create_index("ix_form_submissions_status", "form_submissions", ["status"], unique=False)
     op.create_index(
         "ix_form_submissions_submitted_at",
         "form_submissions",

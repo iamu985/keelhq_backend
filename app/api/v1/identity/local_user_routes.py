@@ -1,17 +1,18 @@
+from typing import Any
 from uuid import UUID
 
 from fastapi import APIRouter
 
 from app.db.session import SessionLocal
 from app.repositories.identity import LocalUserRepository
-from app.schemas.identity import CreateLocalUser
+from app.schemas.identity import CreateLocalUser, LocalUserDetail
 from app.utils.mappers import LocalUserMapper
 
 router = APIRouter(prefix="/local-user")
 
 
 @router.post("/create")
-async def create_local_user(payload: CreateLocalUser):
+async def create_local_user(payload: CreateLocalUser) -> LocalUserDetail | dict[str, Any]:
     async with SessionLocal() as session:
         repository = LocalUserRepository(session=session)
         user_to_create = LocalUserMapper.from_create(payload)
@@ -25,7 +26,7 @@ async def create_local_user(payload: CreateLocalUser):
 
 
 @router.get("/list")
-async def list_local_users():
+async def list_local_users() -> list[LocalUserDetail]:
     async with SessionLocal() as session:
         repository = LocalUserRepository(session)
         users = await repository.list()
@@ -33,7 +34,7 @@ async def list_local_users():
 
 
 @router.get("/{user_id}/detail")
-async def get_user_detail_by_id(user_id: str):
+async def get_user_detail_by_id(user_id: str) -> LocalUserDetail | dict[str, Any]:
     async with SessionLocal() as session:
         repository = LocalUserRepository(session)
         user = await repository.get(user_id=UUID(user_id))

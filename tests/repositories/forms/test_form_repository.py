@@ -5,7 +5,8 @@ Responsibility:
   AsyncSession so the suite stays fast and isolated from the database.
 """
 
-from typing import Sequence
+from collections.abc import Sequence
+from typing import cast
 from unittest.mock import AsyncMock, MagicMock
 from uuid import UUID, uuid4
 
@@ -15,12 +16,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.models import Form
 from app.repositories.forms.form_repository import FormRepository
 
-
 SITE_ID = UUID("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
 
 
 @pytest.fixture
-def mock_session() -> AsyncSession:
+def mock_session() -> AsyncMock:
     """Return a mocked AsyncSession with all async methods pre-wired."""
     session = AsyncMock(spec=AsyncSession)
     session.execute = AsyncMock()
@@ -57,15 +57,15 @@ def sample_form() -> Form:
 
 
 @pytest.fixture
-def repository(mock_session: AsyncSession) -> FormRepository:
+def repository(mock_session: AsyncMock) -> FormRepository:
     """Return a FormRepository backed by the mocked session."""
-    return FormRepository(session=mock_session)
+    return FormRepository(session=cast(AsyncSession, mock_session))
 
 
 # TODO: add unit tests for logging assertions once they matter.
 async def test_get_form_by_id_found(
     repository: FormRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_form: Form,
 ) -> None:
@@ -81,7 +81,7 @@ async def test_get_form_by_id_found(
 
 async def test_get_form_by_id_not_found(
     repository: FormRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """get(form_id) should return None when no form matches."""
@@ -96,7 +96,7 @@ async def test_get_form_by_id_not_found(
 
 async def test_get_by_site_and_slug_found(
     repository: FormRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_form: Form,
 ) -> None:
@@ -112,7 +112,7 @@ async def test_get_by_site_and_slug_found(
 
 async def test_get_by_site_and_slug_not_found(
     repository: FormRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """get_by_site_and_slug should return None when the slug is unknown for that site."""
@@ -127,7 +127,7 @@ async def test_get_by_site_and_slug_not_found(
 
 async def test_list_by_site_no_filter(
     repository: FormRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_form: Form,
 ) -> None:
@@ -143,7 +143,7 @@ async def test_list_by_site_no_filter(
 
 async def test_list_by_site_active_only(
     repository: FormRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_form: Form,
 ) -> None:
@@ -159,7 +159,7 @@ async def test_list_by_site_active_only(
 
 async def test_list_by_site_empty(
     repository: FormRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """list_by_site should return empty sequence when no forms exist for the site."""
@@ -174,7 +174,7 @@ async def test_list_by_site_empty(
 
 async def test_create_form(
     repository: FormRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     sample_form: Form,
 ) -> None:
     """create(form) should add, flush, refresh, and return the form."""
@@ -188,7 +188,7 @@ async def test_create_form(
 
 async def test_delete_form(
     repository: FormRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     sample_form: Form,
 ) -> None:
     """delete(form) should delete the form, flush, and return it."""

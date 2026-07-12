@@ -9,7 +9,7 @@ compromise of the database does not expose usable credentials.
 """
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Index, UniqueConstraint
 from sqlmodel import Field, Relationship
@@ -35,7 +35,7 @@ class AccessToken(BaseModel, IsPartOfSite, table=True):
         nullable=False,
         description="Human-readable label for the token (e.g., 'Claude Code').",
     )
-    description: Optional[str] = Field(
+    description: str | None = Field(
         default=None,
         description="Optional explanation of the token's purpose.",
     )
@@ -45,11 +45,11 @@ class AccessToken(BaseModel, IsPartOfSite, table=True):
         index=True,
         description="Hash of the raw token. The raw token is never persisted.",
     )
-    last_used_at: Optional[datetime] = Field(
+    last_used_at: datetime | None = Field(
         default=None,
         description="Most recent time the token was used to authenticate.",
     )
-    expires_at: Optional[datetime] = Field(
+    expires_at: datetime | None = Field(
         default=None,
         description="Optional expiration time after which the token is rejected.",
     )

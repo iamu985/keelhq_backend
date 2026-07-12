@@ -5,7 +5,7 @@ Responsibility:
 - Remain free of business logic and exception handling.
 """
 
-from typing import Optional, Sequence
+from collections.abc import Sequence
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -28,7 +28,7 @@ class ContentEntryRepository:
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
 
-    async def get(self, entry_id: UUID) -> Optional[ContentEntry]:
+    async def get(self, entry_id: UUID) -> ContentEntry | None:
         """Return the content entry with the given primary key, or None if not found."""
         logger.info("Fetching ContentEntry by id.")
         logger.debug(f"entry_id={entry_id}")
@@ -37,9 +37,7 @@ class ContentEntryRepository:
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
-    async def get_by_site_and_slug(
-        self, site_id: UUID, slug: str
-    ) -> Optional[ContentEntry]:
+    async def get_by_site_and_slug(self, site_id: UUID, slug: str) -> ContentEntry | None:
         """Return the entry within a site that matches the given slug, or None.
 
         Slug uniqueness is scoped per site, so both site_id and slug are required.
@@ -57,8 +55,8 @@ class ContentEntryRepository:
     async def list_by_site(
         self,
         site_id: UUID,
-        status: Optional[ContentStatus] = None,
-        definition_id: Optional[UUID] = None,
+        status: ContentStatus | None = None,
+        definition_id: UUID | None = None,
     ) -> Sequence[ContentEntry]:
         """Return all entries for a site, with optional status and definition filters."""
         logger.info("Listing ContentEntries by site_id.")
@@ -76,7 +74,7 @@ class ContentEntryRepository:
     async def list_by_definition(
         self,
         definition_id: UUID,
-        status: Optional[ContentStatus] = None,
+        status: ContentStatus | None = None,
     ) -> Sequence[ContentEntry]:
         """Return all entries for a specific definition, with optional status filter."""
         logger.info("Listing ContentEntries by definition_id.")

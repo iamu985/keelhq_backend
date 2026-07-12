@@ -5,8 +5,6 @@ Responsibility:
 - Keep schemas decoupled from ORM models.
 """
 
-from typing import Optional
-
 from pydantic import BaseModel
 
 
@@ -20,8 +18,8 @@ class CreateSolution(BaseModel):
     name: str
     slug: str
     display_name: str
-    description: Optional[str] = None
-    icon: Optional[str] = None
+    description: str | None = None
+    icon: str | None = None
     version: str = "0.1.0"
     is_builtin: bool = True
 
@@ -33,4 +31,4 @@ class ListSolutionQuery(BaseModel):
     - Carry optional filter parameters from the service layer to the repository.
     """
 
-    is_builtin: Optional[bool] = None
+    is_builtin: bool | None = None

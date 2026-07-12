@@ -5,7 +5,7 @@ Responsiblity:
 - Define the database schema for verification of the local user for development user accounts.
 """
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
 from sqlalchemy import Column, DateTime
@@ -15,7 +15,7 @@ from app.db.models.mixins import BaseModel
 
 
 def expires_in_15_minutes() -> datetime:
-    return datetime.now(timezone.utc) + timedelta(minutes=15)
+    return datetime.now(UTC) + timedelta(minutes=15)
 
 
 class VerificationCode(BaseModel, table=True):
@@ -31,6 +31,4 @@ class VerificationCode(BaseModel, table=True):
     is_used: bool = Field(default=False, nullable=False)
 
     #  Relationship with local_user
-    local_user_id: UUID = Field(
-        foreign_key="local_users.id", nullable=False, index=True
-    )
+    local_user_id: UUID = Field(foreign_key="local_users.id", nullable=False, index=True)

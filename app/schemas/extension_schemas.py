@@ -4,7 +4,6 @@ Responsibility:
     Will be defined here.
 """
 
-from typing import List, Optional
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -23,13 +22,13 @@ class SiteDetail(BaseModel):
     owner_id: UUID
     name: str
     slug: str
-    description: Optional[str] = None
-    logo_url: Optional[str] = None
+    description: str | None = None
+    logo_url: str | None = None
     status: SiteStatus
     visibility: SiteVisibility
     extension_id: CreateSolution
 
-    definitions: List[CreateEditableComponentDefinition] = []
-    content_entries: List[CreateContentEntry] = []
-    media_assets: List[CreateMediaAsset] = []
-    forms: List[CreateForm] = []
+    definitions: list[CreateEditableComponentDefinition] = []
+    content_entries: list[CreateContentEntry] = []
+    media_assets: list[CreateMediaAsset] = []
+    forms: list[CreateForm] = []

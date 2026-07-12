@@ -9,7 +9,7 @@ store any user-generated content. The actual content lives in `ContentEntry` and
 linked to the `EditableComponentDefinition` rows that a Solution provides.
 """
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Index, UniqueConstraint
 from sqlmodel import Field, Relationship
@@ -52,11 +52,11 @@ class Solution(BaseModel, table=True):
         nullable=False,
         description="Human-readable name shown in the dashboard (e.g., 'Business').",
     )
-    description: Optional[str] = Field(
+    description: str | None = Field(
         default=None,
         description="Short explanation of the solution's purpose and target audience.",
     )
-    icon: Optional[str] = Field(
+    icon: str | None = Field(
         default=None,
         description="Optional icon identifier used by the dashboard.",
     )

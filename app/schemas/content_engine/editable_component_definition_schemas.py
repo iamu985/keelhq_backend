@@ -5,7 +5,7 @@ Responsibility:
 - Keep schemas decoupled from ORM models.
 """
 
-from typing import Any, Optional
+from typing import Any
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -24,10 +24,10 @@ class CreateEditableComponentDefinition(BaseModel):
     solution_id: UUID
     key: str
     display_name: str
-    description: Optional[str] = None
+    description: str | None = None
     kind: EditableComponentKind
     display_order: int = 0
-    icon: Optional[str] = None
+    icon: str | None = None
     editor_schema: list[dict[str, Any]] = []
 
 
@@ -38,5 +38,5 @@ class ListEditableComponentDefinitionQuery(BaseModel):
     - Carry optional filter parameters from the service layer to the repository.
     """
 
-    site_id: Optional[UUID] = None
-    kind: Optional[EditableComponentKind] = None
+    site_id: UUID | None = None
+    kind: EditableComponentKind | None = None

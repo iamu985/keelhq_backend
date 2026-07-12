@@ -9,15 +9,14 @@ uses to generate an editing interface. The actual values edited by users live in
 `ContentEntry` and are validated against this definition at the application layer.
 """
 
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import Column, Enum, Index, UniqueConstraint
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlmodel import Field, Relationship
 
-from app.shared.enums import EditableComponentKind
-
 from app.db.models.mixins import BaseModel, IsPartOfSite, IsPartOfSolution
+from app.shared.enums import EditableComponentKind
 
 if TYPE_CHECKING:
     from app.db.models.content_engine.content_entry import ContentEntry
@@ -26,9 +25,7 @@ if TYPE_CHECKING:
 
 
 # TODO: add unit tests for this model
-class EditableComponentDefinition(
-    BaseModel, IsPartOfSite, IsPartOfSolution, table=True
-):
+class EditableComponentDefinition(BaseModel, IsPartOfSite, IsPartOfSolution, table=True):
     """A template describing one editable section of a site.
 
     Responsibility:
@@ -53,7 +50,7 @@ class EditableComponentDefinition(
         nullable=False,
         description="Human-readable label shown in the dashboard sidebar (e.g., 'Hero').",
     )
-    description: Optional[str] = Field(
+    description: str | None = Field(
         default=None,
         description="Optional explanation of what this component represents.",
     )
@@ -71,7 +68,7 @@ class EditableComponentDefinition(
         index=True,
         description="Position in the dashboard sidebar; lower values appear first.",
     )
-    icon: Optional[str] = Field(
+    icon: str | None = Field(
         default=None,
         description="Optional icon identifier used by the dashboard.",
     )
@@ -97,9 +94,7 @@ class EditableComponentDefinition(
     entries: list["ContentEntry"] = Relationship(back_populates="definition")
 
     __table_args__ = (  # pyright: ignore
-        UniqueConstraint(
-            "site_id", "key", name="uq_editable_component_definitions_site_id_key"
-        ),
+        UniqueConstraint("site_id", "key", name="uq_editable_component_definitions_site_id_key"),
         Index("ix_editable_component_definitions_site_id_kind", "site_id", "kind"),
         Index(
             "ix_editable_component_definitions_site_id_display_order",

@@ -5,7 +5,8 @@ Responsibility:
   AsyncSession so the suite stays fast and isolated from the database.
 """
 
-from typing import Sequence
+from collections.abc import Sequence
+from typing import cast
 from unittest.mock import AsyncMock, MagicMock
 from uuid import UUID, uuid4
 
@@ -15,10 +16,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.models import Site
 from app.repositories.site_management.site_repository import SiteRepository
 from app.schemas.site_management.site_schemas import ListSiteQuery
+from app.shared.enums import SiteStatus
 
 
 @pytest.fixture
-def mock_session() -> AsyncSession:
+def mock_session() -> AsyncMock:
     """Return a mocked AsyncSession with all async methods pre-wired."""
     session = AsyncMock(spec=AsyncSession)
     session.execute = AsyncMock()
@@ -54,15 +56,15 @@ def sample_site() -> Site:
 
 
 @pytest.fixture
-def repository(mock_session: AsyncSession) -> SiteRepository:
+def repository(mock_session: AsyncMock) -> SiteRepository:
     """Return a SiteRepository backed by the mocked session."""
-    return SiteRepository(session=mock_session)
+    return SiteRepository(session=cast(AsyncSession, mock_session))
 
 
 # TODO: add unit tests for logging assertions once they matter.
 async def test_get_site_by_id_found(
     repository: SiteRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_site: Site,
 ) -> None:
@@ -78,7 +80,7 @@ async def test_get_site_by_id_found(
 
 async def test_get_site_by_id_not_found(
     repository: SiteRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """get(site_id) should return None when no site matches."""
@@ -93,7 +95,7 @@ async def test_get_site_by_id_not_found(
 
 async def test_get_by_slug_found(
     repository: SiteRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_site: Site,
 ) -> None:
@@ -109,7 +111,7 @@ async def test_get_by_slug_found(
 
 async def test_get_by_slug_not_found(
     repository: SiteRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """get_by_slug(slug) should return None when the slug is unknown."""
@@ -124,7 +126,7 @@ async def test_get_by_slug_not_found(
 
 async def test_get_by_owner(
     repository: SiteRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_site: Site,
 ) -> None:
@@ -140,7 +142,7 @@ async def test_get_by_owner(
 
 async def test_get_by_owner_empty(
     repository: SiteRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """get_by_owner(owner_id) should return empty sequence when no sites exist."""
@@ -155,7 +157,7 @@ async def test_get_by_owner_empty(
 
 async def test_create_site(
     repository: SiteRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     sample_site: Site,
 ) -> None:
     """create(site) should add, flush, refresh, and return the site."""
@@ -169,7 +171,7 @@ async def test_create_site(
 
 async def test_list_sites_no_query(
     repository: SiteRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_site: Site,
 ) -> None:
@@ -185,7 +187,7 @@ async def test_list_sites_no_query(
 
 async def test_list_sites_with_status_filter(
     repository: SiteRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_site: Site,
 ) -> None:
@@ -193,7 +195,7 @@ async def test_list_sites_with_status_filter(
     mock_result.scalars.return_value.all.return_value = [sample_site]
     mock_session.execute.return_value = mock_result
 
-    query = ListSiteQuery(status="active")
+    query = ListSiteQuery(status=SiteStatus.ACTIVE)
     sites = await repository.list(query=query)
 
     assert sites == [sample_site]
@@ -202,7 +204,7 @@ async def test_list_sites_with_status_filter(
 
 async def test_list_sites_with_owner_filter(
     repository: SiteRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_site: Site,
 ) -> None:
@@ -219,7 +221,7 @@ async def test_list_sites_with_owner_filter(
 
 async def test_list_sites_empty(
     repository: SiteRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """list() should return an empty sequence when no sites exist."""
@@ -234,7 +236,7 @@ async def test_list_sites_empty(
 
 async def test_delete_site(
     repository: SiteRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     sample_site: Site,
 ) -> None:
     """delete(site) should delete the site, flush, and return it."""

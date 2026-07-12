@@ -8,7 +8,7 @@ from app.schemas.identity import CreateLocalUser
 from app.utils.mappers import LocalUserMapper
 
 
-def test_local_user_mapper_from_create():
+def test_local_user_mapper_from_create() -> None:
     contract = CreateLocalUser(
         email="some@example.com",
         username="some123",
@@ -22,12 +22,12 @@ def test_local_user_mapper_from_create():
     pprint(result.username)
 
 
-async def test_localUserMapper_toList():
+async def test_localUserMapper_toList() -> None:
     async with SessionLocal() as session:
         repository = LocalUserRepository(session)
         users = await repository.list()
         pprint(LocalUserMapper.to_list(users))
 
 
-async def test_localUserMapper_toDetail():
+async def test_localUserMapper_toDetail() -> None:
     pass

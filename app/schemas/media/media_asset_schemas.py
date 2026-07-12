@@ -5,7 +5,7 @@ Responsibility:
 - Keep schemas decoupled from ORM models and storage provider details.
 """
 
-from typing import Any, Optional
+from typing import Any
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -23,12 +23,12 @@ class CreateMediaAsset(BaseModel):
     site_id: UUID
     filename: str
     storage_key: str
-    mime_type: Optional[str] = None
-    extension: Optional[str] = None
+    mime_type: str | None = None
+    extension: str | None = None
     size: int
-    width: Optional[int] = None
-    height: Optional[int] = None
-    alt_text: Optional[str] = None
+    width: int | None = None
+    height: int | None = None
+    alt_text: str | None = None
     extra_metadata: dict[str, Any] = {}
 
 
@@ -39,6 +39,6 @@ class ListMediaAssetQuery(BaseModel):
     - Carry optional filter parameters from the service layer to the repository.
     """
 
-    site_id: Optional[UUID] = None
-    mime_type: Optional[str] = None
-    extension: Optional[str] = None
+    site_id: UUID | None = None
+    mime_type: str | None = None
+    extension: str | None = None

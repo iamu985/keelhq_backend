@@ -5,7 +5,8 @@ Responsibility:
   AsyncSession so the suite stays fast and isolated from the database.
 """
 
-from typing import Sequence
+from collections.abc import Sequence
+from typing import cast
 from unittest.mock import AsyncMock, MagicMock
 from uuid import UUID, uuid4
 
@@ -16,12 +17,11 @@ from app.db.models import FormSubmission
 from app.repositories.forms.form_submission_repository import FormSubmissionRepository
 from app.shared.enums import FormSubmissionStatus
 
-
 FORM_ID = UUID("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
 
 
 @pytest.fixture
-def mock_session() -> AsyncSession:
+def mock_session() -> AsyncMock:
     """Return a mocked AsyncSession with all async methods pre-wired."""
     session = AsyncMock(spec=AsyncSession)
     session.execute = AsyncMock()
@@ -55,15 +55,15 @@ def sample_submission() -> FormSubmission:
 
 
 @pytest.fixture
-def repository(mock_session: AsyncSession) -> FormSubmissionRepository:
+def repository(mock_session: AsyncMock) -> FormSubmissionRepository:
     """Return a FormSubmissionRepository backed by the mocked session."""
-    return FormSubmissionRepository(session=mock_session)
+    return FormSubmissionRepository(session=cast(AsyncSession, mock_session))
 
 
 # TODO: add unit tests for logging assertions once they matter.
 async def test_get_submission_by_id_found(
     repository: FormSubmissionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_submission: FormSubmission,
 ) -> None:
@@ -79,7 +79,7 @@ async def test_get_submission_by_id_found(
 
 async def test_get_submission_by_id_not_found(
     repository: FormSubmissionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """get(submission_id) should return None when no submission matches."""
@@ -94,7 +94,7 @@ async def test_get_submission_by_id_not_found(
 
 async def test_list_by_form_no_filter(
     repository: FormSubmissionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_submission: FormSubmission,
 ) -> None:
@@ -110,7 +110,7 @@ async def test_list_by_form_no_filter(
 
 async def test_list_by_form_with_status_filter(
     repository: FormSubmissionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_submission: FormSubmission,
 ) -> None:
@@ -118,9 +118,7 @@ async def test_list_by_form_with_status_filter(
     mock_result.scalars.return_value.all.return_value = [sample_submission]
     mock_session.execute.return_value = mock_result
 
-    submissions = await repository.list_by_form(
-        FORM_ID, status=FormSubmissionStatus.PENDING
-    )
+    submissions = await repository.list_by_form(FORM_ID, status=FormSubmissionStatus.PENDING)
 
     assert submissions == [sample_submission]
     mock_session.execute.assert_awaited_once()
@@ -128,7 +126,7 @@ async def test_list_by_form_with_status_filter(
 
 async def test_list_by_form_empty(
     repository: FormSubmissionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """list_by_form should return empty sequence when no submissions exist."""
@@ -143,7 +141,7 @@ async def test_list_by_form_empty(
 
 async def test_create_submission(
     repository: FormSubmissionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     sample_submission: FormSubmission,
 ) -> None:
     """create(submission) should add, flush, refresh, and return the submission."""
@@ -157,7 +155,7 @@ async def test_create_submission(
 
 async def test_delete_submission(
     repository: FormSubmissionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     sample_submission: FormSubmission,
 ) -> None:
     """delete(submission) should delete the submission, flush, and return it."""

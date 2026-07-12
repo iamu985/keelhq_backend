@@ -8,7 +8,7 @@ and render an uploaded file while the actual bytes live in an external storage
 service. This keeps the core domain decoupled from S3, R2, or any other provider.
 """
 
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import Column, Index, UniqueConstraint
 from sqlalchemy.dialects.postgresql import JSONB
@@ -41,11 +41,11 @@ class MediaAsset(BaseModel, IsPartOfSite, table=True):
         index=True,
         description="Opaque provider-specific key used to retrieve the file bytes.",
     )
-    mime_type: Optional[str] = Field(
+    mime_type: str | None = Field(
         default=None,
         description="MIME type of the asset (e.g., 'image/jpeg').",
     )
-    extension: Optional[str] = Field(
+    extension: str | None = Field(
         default=None,
         description="File extension without the leading dot (e.g., 'jpg').",
     )
@@ -53,15 +53,15 @@ class MediaAsset(BaseModel, IsPartOfSite, table=True):
         nullable=False,
         description="Size of the file in bytes.",
     )
-    width: Optional[int] = Field(
+    width: int | None = Field(
         default=None,
         description="Width in pixels for image/video assets; None for non-visual assets.",
     )
-    height: Optional[int] = Field(
+    height: int | None = Field(
         default=None,
         description="Height in pixels for image/video assets; None for non-visual assets.",
     )
-    alt_text: Optional[str] = Field(
+    alt_text: str | None = Field(
         default=None,
         description="Accessible description used by frontend renderers.",
     )

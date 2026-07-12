@@ -5,7 +5,7 @@ Responsibility:
 - Remain free of business logic and exception handling.
 """
 
-from typing import Optional, Sequence
+from collections.abc import Sequence
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -27,7 +27,7 @@ class MediaAssetRepository:
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
 
-    async def get(self, asset_id: UUID) -> Optional[MediaAsset]:
+    async def get(self, asset_id: UUID) -> MediaAsset | None:
         """Return the asset with the given primary key, or None if not found."""
         logger.info("Fetching MediaAsset by id.")
         logger.debug(f"asset_id={asset_id}")
@@ -36,7 +36,7 @@ class MediaAssetRepository:
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
-    async def get_by_storage_key(self, storage_key: str) -> Optional[MediaAsset]:
+    async def get_by_storage_key(self, storage_key: str) -> MediaAsset | None:
         """Return the asset with the given unique storage key, or None if not found.
 
         The storage_key is the opaque provider-specific identifier returned after
@@ -52,8 +52,8 @@ class MediaAssetRepository:
     async def list_by_site(
         self,
         site_id: UUID,
-        mime_type: Optional[str] = None,
-        extension: Optional[str] = None,
+        mime_type: str | None = None,
+        extension: str | None = None,
     ) -> Sequence[MediaAsset]:
         """Return all assets for a site, with optional mime_type and extension filters."""
         logger.info("Listing MediaAssets by site_id.")

@@ -1,6 +1,7 @@
 from fastapi import FastAPI
-from app.api.v1.routes import router
+
 from app.api.v1.identity import router as local_user_router
+from app.api.v1.routes import router
 
 app = FastAPI(version="0.1.0", title="KeelHQ API v1")
 

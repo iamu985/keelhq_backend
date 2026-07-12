@@ -5,7 +5,6 @@ Responsibility:
 - Keep schemas free of database or ORM imports.
 """
 
-from typing import Optional
 from uuid import UUID
 
 from pydantic import BaseModel, EmailStr
@@ -22,8 +21,8 @@ class CreateLocalUser(BaseModel):
     username: str
     password_hash: str
     first_name: str
-    middle_name: Optional[str] = None
-    last_name: Optional[str] = None
+    middle_name: str | None = None
+    last_name: str | None = None
 
 
 class LocalUserDetail(BaseModel):
@@ -38,8 +37,8 @@ class LocalUserDetail(BaseModel):
     email: EmailStr
     username: str
     first_name: str
-    middle_name: Optional[str] = None
-    last_name: Optional[str] = None
+    middle_name: str | None = None
+    last_name: str | None = None
     created_at: str
     is_active: bool = False
     is_superuser: bool = False

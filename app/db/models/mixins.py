@@ -4,8 +4,7 @@ Responsibility:
 - Provide reusable mixins and a base model for all database tables.
 """
 
-from datetime import datetime, timezone
-from typing import Optional
+from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
 from sqlmodel import DateTime, Field, SQLModel
@@ -53,11 +52,11 @@ class TimestampMixin(SQLModel, table=False):
     """
 
     created_at: datetime = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
+        default_factory=lambda: datetime.now(UTC),
         sa_type=DateTime(timezone=True),  # type: ignore[call-overload]
     )
-    updated_at: Optional[datetime] = Field(
-        default_factory=lambda: datetime.now(timezone.utc),
+    updated_at: datetime | None = Field(
+        default_factory=lambda: datetime.now(UTC),
         sa_type=DateTime(timezone=True),  # type: ignore[call-overload]
     )
 
