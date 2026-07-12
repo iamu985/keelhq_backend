@@ -1,0 +1,28 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.5.0 # Check for latest version
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: uv run mypy
+        language: system
+        types: [python]
+        stages: [pre-push]
+
+  - repo: local
+    hooks:
+      - id: pytest-coverage
+        name: pytest coverage
+        entry: uv run python -m pytest
+        language: system
+        types: [python]
+        stages: [pre-commit]
+        pass_filenames: false
+        always_run: true
+        args: [--cov=keelhq, --cov-fail-under=75] # Set your coverage threshold

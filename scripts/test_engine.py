@@ -9,12 +9,13 @@ import asyncio
 import pytest
 from sqlalchemy import text
 
-from app.db.engine import ENGINE
+from keelhq.db.engine import create_engine
 
 
 @pytest.mark.asyncio
 async def test_connection() -> None:
-    async with ENGINE.connect() as conn:
+    engine = create_engine()
+    async with engine.connect() as conn:
         print("✅ Connection acquired.")
 
         result = await conn.execute(text("Select 1"))
@@ -27,7 +28,7 @@ async def test_connection() -> None:
 
         print("🗒️ Query result:", row[0])
 
-        await ENGINE.dispose()
+        await engine.dispose()
         print("🔌 Connection closed")
 
 

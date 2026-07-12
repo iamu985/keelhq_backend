@@ -5,23 +5,23 @@ Responsibility:
   AsyncSession so the suite stays fast and isolated from the database.
 """
 
-from typing import Sequence
+from collections.abc import Sequence
+from typing import cast
 from unittest.mock import AsyncMock, MagicMock
 from uuid import UUID, uuid4
 
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.models import MediaAsset
-from app.repositories.media.media_asset_repository import MediaAssetRepository
-
+from keelhq.db.models import MediaAsset
+from keelhq.repositories.media.media_asset_repository import MediaAssetRepository
 
 SITE_ID = UUID("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
 STORAGE_KEY = "uploads/2024/hero.jpg"
 
 
 @pytest.fixture
-def mock_session() -> AsyncSession:
+def mock_session() -> AsyncMock:
     """Return a mocked AsyncSession with all async methods pre-wired."""
     session = AsyncMock(spec=AsyncSession)
     session.execute = AsyncMock()
@@ -59,15 +59,15 @@ def sample_asset() -> MediaAsset:
 
 
 @pytest.fixture
-def repository(mock_session: AsyncSession) -> MediaAssetRepository:
+def repository(mock_session: AsyncMock) -> MediaAssetRepository:
     """Return a MediaAssetRepository backed by the mocked session."""
-    return MediaAssetRepository(session=mock_session)
+    return MediaAssetRepository(session=cast(AsyncSession, mock_session))
 
 
 # TODO: add unit tests for logging assertions once they matter.
 async def test_get_asset_by_id_found(
     repository: MediaAssetRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_asset: MediaAsset,
 ) -> None:
@@ -83,7 +83,7 @@ async def test_get_asset_by_id_found(
 
 async def test_get_asset_by_id_not_found(
     repository: MediaAssetRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """get(asset_id) should return None when no asset matches."""
@@ -98,7 +98,7 @@ async def test_get_asset_by_id_not_found(
 
 async def test_get_by_storage_key_found(
     repository: MediaAssetRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_asset: MediaAsset,
 ) -> None:
@@ -114,7 +114,7 @@ async def test_get_by_storage_key_found(
 
 async def test_get_by_storage_key_not_found(
     repository: MediaAssetRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """get_by_storage_key should return None when the key is unknown."""
@@ -129,7 +129,7 @@ async def test_get_by_storage_key_not_found(
 
 async def test_list_by_site_no_filter(
     repository: MediaAssetRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_asset: MediaAsset,
 ) -> None:
@@ -145,7 +145,7 @@ async def test_list_by_site_no_filter(
 
 async def test_list_by_site_mime_type_filter(
     repository: MediaAssetRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_asset: MediaAsset,
 ) -> None:
@@ -161,7 +161,7 @@ async def test_list_by_site_mime_type_filter(
 
 async def test_list_by_site_extension_filter(
     repository: MediaAssetRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_asset: MediaAsset,
 ) -> None:
@@ -177,7 +177,7 @@ async def test_list_by_site_extension_filter(
 
 async def test_list_by_site_empty(
     repository: MediaAssetRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """list_by_site should return empty sequence when no assets exist for the site."""
@@ -192,7 +192,7 @@ async def test_list_by_site_empty(
 
 async def test_create_asset(
     repository: MediaAssetRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     sample_asset: MediaAsset,
 ) -> None:
     """create(asset) should add, flush, refresh, and return the asset."""
@@ -206,7 +206,7 @@ async def test_create_asset(
 
 async def test_delete_asset(
     repository: MediaAssetRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     sample_asset: MediaAsset,
 ) -> None:
     """delete(asset) should delete the asset, flush, and return it."""

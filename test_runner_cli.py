@@ -1,25 +1,29 @@
-import os
 import asyncio
+import os
+from collections.abc import Callable
+from typing import Any
+
 from devtools import pprint
+
+from scripts.test_data_mapper import (
+    test_local_user_mapper_from_create,
+    test_localUserMapper_toList,
+)
 from scripts.test_engine import test_connection
 from scripts.test_settings import test_settings
-from scripts.test_data_mapper import (
-    test_localUserMapper_toList,
-    test_local_user_mapper_from_create,
-)
 
-RUNNERS = {
-    "test_connection": [test_connection, True],
-    "test_settings": [test_settings, False],
-    "test_localUserMapper_fromCreate": [test_local_user_mapper_from_create, False],
-    "test_localUserMapper_toList": [test_localUserMapper_toList, True],
+RUNNERS: dict[str, tuple[Callable[[], Any], bool]] = {
+    "test_connection": (test_connection, True),
+    "test_settings": (test_settings, False),
+    "test_localUserMapper_fromCreate": (test_local_user_mapper_from_create, False),
+    "test_localUserMapper_toList": (test_localUserMapper_toList, True),
 }
 
 
 if __name__ == "__main__":
     running = True
     count = 1
-    indexes = [name for name in RUNNERS.keys()]
+    indexes = list(RUNNERS.keys())
 
     while running:
         os.system("clear")

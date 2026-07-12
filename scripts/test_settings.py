@@ -1,4 +1,4 @@
-from app.core.config import settings
+from keelhq.core.config import settings
 
 
 def test_settings() -> None:

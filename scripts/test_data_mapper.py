@@ -2,13 +2,17 @@ from uuid import uuid4
 
 from devtools import pprint
 
-from app.db.session import SessionLocal
-from app.repositories.identity import LocalUserRepository
-from app.schemas.identity import CreateLocalUser
-from app.utils.mappers import LocalUserMapper
+from keelhq.db.engine import create_engine
+from keelhq.db.session import create_session_factory
+from keelhq.repositories.identity import LocalUserRepository
+from keelhq.schemas.identity import CreateLocalUser
+from keelhq.utils.mappers import LocalUserMapper
+
+engine = create_engine()
+SessionLocal = create_session_factory(engine)
 
 
-def test_local_user_mapper_from_create():
+def test_local_user_mapper_from_create() -> None:
     contract = CreateLocalUser(
         email="some@example.com",
         username="some123",
@@ -22,12 +26,12 @@ def test_local_user_mapper_from_create():
     pprint(result.username)
 
 
-async def test_localUserMapper_toList():
+async def test_localUserMapper_toList() -> None:
     async with SessionLocal() as session:
         repository = LocalUserRepository(session)
         users = await repository.list()
         pprint(LocalUserMapper.to_list(users))
 
 
-async def test_localUserMapper_toDetail():
+async def test_localUserMapper_toDetail() -> None:
     pass

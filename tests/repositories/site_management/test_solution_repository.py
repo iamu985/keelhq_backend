@@ -5,19 +5,20 @@ Responsibility:
   AsyncSession so the suite stays fast and isolated from the database.
 """
 
+from typing import cast
 from unittest.mock import AsyncMock, MagicMock
 from uuid import UUID, uuid4
 
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.models import Solution
-from app.repositories.site_management.solution_repository import SolutionRepository
-from app.schemas.site_management.solution_schemas import ListSolutionQuery
+from keelhq.db.models import Solution
+from keelhq.repositories.site_management.solution_repository import SolutionRepository
+from keelhq.schemas.site_management.solution_schemas import ListSolutionQuery
 
 
 @pytest.fixture
-def mock_session() -> AsyncSession:
+def mock_session() -> AsyncMock:
     """Return a mocked AsyncSession with all async methods pre-wired."""
     session = AsyncMock(spec=AsyncSession)
     session.execute = AsyncMock()
@@ -53,15 +54,15 @@ def sample_solution() -> Solution:
 
 
 @pytest.fixture
-def repository(mock_session: AsyncSession) -> SolutionRepository:
+def repository(mock_session: AsyncMock) -> SolutionRepository:
     """Return a SolutionRepository backed by the mocked session."""
-    return SolutionRepository(session=mock_session)
+    return SolutionRepository(session=cast(AsyncSession, mock_session))
 
 
 # TODO: add unit tests for logging assertions once they matter.
 async def test_get_solution_by_id_found(
     repository: SolutionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_solution: Solution,
 ) -> None:
@@ -77,7 +78,7 @@ async def test_get_solution_by_id_found(
 
 async def test_get_solution_by_id_not_found(
     repository: SolutionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """get(solution_id) should return None when no solution matches."""
@@ -92,7 +93,7 @@ async def test_get_solution_by_id_not_found(
 
 async def test_get_by_slug_found(
     repository: SolutionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_solution: Solution,
 ) -> None:
@@ -108,7 +109,7 @@ async def test_get_by_slug_found(
 
 async def test_get_by_slug_not_found(
     repository: SolutionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """get_by_slug(slug) should return None when the slug is unknown."""
@@ -123,7 +124,7 @@ async def test_get_by_slug_not_found(
 
 async def test_get_by_name_found(
     repository: SolutionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_solution: Solution,
 ) -> None:
@@ -139,7 +140,7 @@ async def test_get_by_name_found(
 
 async def test_get_by_name_not_found(
     repository: SolutionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """get_by_name(name) should return None when the name is unknown."""
@@ -154,7 +155,7 @@ async def test_get_by_name_not_found(
 
 async def test_create_solution(
     repository: SolutionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     sample_solution: Solution,
 ) -> None:
     """create(solution) should add, flush, refresh, and return the solution."""
@@ -168,7 +169,7 @@ async def test_create_solution(
 
 async def test_list_solutions_no_query(
     repository: SolutionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_solution: Solution,
 ) -> None:
@@ -184,7 +185,7 @@ async def test_list_solutions_no_query(
 
 async def test_list_solutions_builtin_filter(
     repository: SolutionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
     sample_solution: Solution,
 ) -> None:
@@ -201,7 +202,7 @@ async def test_list_solutions_builtin_filter(
 
 async def test_list_solutions_empty(
     repository: SolutionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     mock_result: MagicMock,
 ) -> None:
     """list() should return an empty sequence when no solutions exist."""
@@ -216,7 +217,7 @@ async def test_list_solutions_empty(
 
 async def test_delete_solution(
     repository: SolutionRepository,
-    mock_session: AsyncSession,
+    mock_session: AsyncMock,
     sample_solution: Solution,
 ) -> None:
     """delete(solution) should delete the solution, flush, and return it."""
