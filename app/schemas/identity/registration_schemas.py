@@ -33,3 +33,9 @@ class RegisterNewUserRequest(BaseModel):
         if self.password != self.password_confirm:
             raise ValueError("passwords do not match.")
         return self
+
+
+class RegistrationSuccessfulResponse(BaseModel):
+    message: str
+    email: EmailStr
+    verification_required: bool
