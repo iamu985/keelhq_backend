@@ -4,6 +4,11 @@ from pydantic import BaseModel, EmailStr, Field, SecretStr, field_validator, mod
 
 
 class RegisterNewUserRequest(BaseModel):
+    """
+    Use:
+    This schema is used when sending data from register page to the backend api.
+    """
+
     username: str = Field(min_length=8, max_length=15, pattern=r"^[a-zA-Z0-9_-]+$")
     email: EmailStr
     password: SecretStr
@@ -36,6 +41,11 @@ class RegisterNewUserRequest(BaseModel):
 
 
 class RegistrationSuccessfulResponse(BaseModel):
+    """
+    Response schema for successfully registering user.
+    Not inteded for API and only meant for frontend
+    """
+
     message: str
     email: EmailStr
     verification_required: bool
