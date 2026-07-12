@@ -44,3 +44,10 @@ jobs:
         APP_DATABASE__PORT: 5432
         PYTHONPATH: .
       run: uv run pytest
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: coverage.xml
+        fail_ci_if_error: false
