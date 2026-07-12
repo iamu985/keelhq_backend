@@ -9,6 +9,7 @@ from app.db.models import (
     MediaAsset,
     Site,
     Solution,
+    VerificationCode,
 )
 
 __all__ = [
@@ -20,6 +21,7 @@ __all__ = [
     "MediaAsset",
     "Site",
     "Solution",
+    "VerificationCode",
     "metadata",
 ]
 

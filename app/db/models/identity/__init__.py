@@ -5,5 +5,6 @@ Responsibility:
 """
 
 from .local_user import LocalUser
+from .verification import VerificationCode
 
-__all__ = ["LocalUser"]
+__all__ = ["LocalUser", "VerificationCode"]
