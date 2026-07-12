@@ -1,7 +1,7 @@
-from app.exceptions import KeelException
+from app.exceptions import DomainError
 
 
-class IdentityError(KeelException):
+class IdentityError(DomainError):
     """Base exception for identity-related operations."""
 
     pass
